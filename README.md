@@ -1,9 +1,9 @@
 # DishcoveryFrontend
 ## Date: 23/10/2025
-### By:
-* Fatima Zaid
-* Eman Qarooni
-* Fatima Ali
+### By: Fatima Zaid , Eman Qarooni and Fatima Ali
+#### [Fatima Zaid GitHub](https://github.com/Fatima-Zaid)
+#### [Eman Qarooni GitHub](https://github.com/emanqarooni)
+#### [Fatima Ali GitHub](https://github.com/Fatema-227)
 
 ***
 
@@ -11,6 +11,12 @@
 ####
 
 #### Dishcovery is a collaborative recipe blog built with the MERN stack that brings food lovers together. Our platform lets users create, share, and explore recipes from around the world, complete with images, ingredients, and detailed instructions. By combining creativity and community, Dishcovery makes discovering new dishes fun, interactive, and inspiring for everyone.
+
+***
+
+### ***Project Link***
+#### [Frontend](https://github.com/emanqarooni/DishcoveryFrontend)
+#### [Backend](https://github.com/emanqarooni/DishcoveryBackend)
 
 ***
 
