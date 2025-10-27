@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react"
 import Post from "../components/Post"
-import Client from "../services/api.js"
-
-
+import Client from "../services/api"
 const challengesData = [
   { month: "January", startDate: "2025-01-01T00:00:00", endDate: "2025-01-31T23:59:59" },
   { month: "February", startDate: "2025-02-01T00:00:00", endDate: "2025-02-28T23:59:59" },
@@ -15,9 +13,8 @@ const challengesData = [
   { month: "September", startDate: "2025-09-01T00:00:00", endDate: "2025-09-30T23:59:59" },
   { month: "October", startDate: "2025-10-01T00:00:00", endDate: "2025-10-31T23:59:59" },
   { month: "November", startDate: "2025-11-01T00:00:00", endDate: "2025-11-30T23:59:59" },
-  { month: "December", startDate: "2025-12-01T00:00:00", endDate: "2025-12-31T23:59:59" },
+  { month: "December", startDate: "2025-12-01T00:00:00", endDate: "2025-12-31T23:59:59" }
 ]
-
 const Challenges = () => {
   const [challenges, setChallenges] = useState([])
   const [description, setDescription] = useState("")
@@ -26,12 +23,10 @@ const Challenges = () => {
   const [currentChallenge, setCurrentChallenge] = useState(null)
   const [winner, setWinner] = useState(null)
   const [timeLeft, setTimeLeft] = useState("")
-
   const getCurrentChallenge = () => {
     const now = new Date()
     return challengesData.find(c => new Date(c.startDate) <= now && now <= new Date(c.endDate)) || null
   }
-
   const updateCountdown = () => {
     if (!currentChallenge) return
     const end = new Date(currentChallenge.endDate)
@@ -40,27 +35,19 @@ const Challenges = () => {
     if (diff <= 0) {
       setTimeLeft("Challenge ended")
       announceWinner()
-    } else {
-      const days = Math.floor(diff / (1000*60*60*24))
-      const hours = Math.floor((diff / (1000*60*60)) % 24)
-      const minutes = Math.floor((diff / (1000*60)) % 60)
-      const seconds = Math.floor((diff / 1000) % 60)
-      setTimeLeft(`${days}d ${hours}h ${minutes}m ${seconds}s`)
+      return
     }
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24)
+    const minutes = Math.floor((diff / (1000 * 60)) % 60)
+    const seconds = Math.floor((diff / 1000) % 60)
+    setTimeLeft(`${days}d ${hours}h ${minutes}m ${seconds}s`)
   }
-
   const announceWinner = () => {
     if (!challenges || challenges.length === 0) return
-    const sorted = [...challenges].sort((a, b) => b.likesCount - a.likesCount)
+    const sorted = [...challenges].sort((a, b) => (b.likes?.length || 0) - (a.likes?.length || 0))
     setWinner(sorted[0])
   }
-
-  useEffect(() => {
-    setCurrentChallenge(getCurrentChallenge())
-    const interval = setInterval(updateCountdown, 1000)
-    return () => clearInterval(interval)
-  }, [challenges])
-
   useEffect(() => {
     const loadChallenges = async () => {
       try {
@@ -72,18 +59,28 @@ const Challenges = () => {
     }
     loadChallenges()
   }, [])
-
-  const handleAddChallenge = async (e) => {
+  useEffect(() => {
+    const activeChallenge = getCurrentChallenge()
+    setCurrentChallenge(activeChallenge)
+    if (activeChallenge) {
+      updateCountdown()
+      const interval = setInterval(updateCountdown, 1000)
+      return () => clearInterval(interval)
+    }
+  }, [currentChallenge])
+  const handleAddChallenge = async e => {
     e.preventDefault()
-    if (!description || !image) { alert("Please provide both image and description")
+    if (!description || !image) {
+      alert("Please provide both image and description")
       return
-      }
+    }
     try {
       setLoading(true)
       const formData = new FormData()
       formData.append("image", image)
       formData.append("description", description)
-      const response = await Client.post("/posts", formData, { headers: {"Content-Type": "multipart/form-data"}
+      const response = await Client.post("/posts", formData, {
+        headers: { "Content-Type": "multipart/form-data" }
       })
       setChallenges([response.data, ...challenges])
       setDescription("")
@@ -94,7 +91,6 @@ const Challenges = () => {
       setLoading(false)
     }
   }
-
   return (
     <div className="challenges-page">
       <h1>{currentChallenge ? currentChallenge.month + " Challenge" : "No Active Challenge"}</h1>
@@ -104,23 +100,36 @@ const Challenges = () => {
           <h2>Winner</h2>
           <p>{winner.description}</p>
           <img src={winner.image} alt="Winner" className="winner-img" />
-          <p>{winner.likesCount} likes</p>
+          <p>{winner.likes?.length || 0} likes</p>
         </div>
       )}
       {currentChallenge && new Date() <= new Date(currentChallenge.endDate) && (
         <form className="add-challenge-form" onSubmit={handleAddChallenge}>
           <h3>Add Your Recipe</h3>
           <input type="file" accept="image/*" onChange={e => setImage(e.target.files[0])} />
-          <textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Write a short description about your recipe" />
-          <button type="submit" disabled={loading}>{loading ? "Uploading..." : "Add Recipe"}</button>
+          <textarea
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+            placeholder="Write a short description about your recipe"
+          />
+          <button type="submit" disabled={loading}>
+            {loading ? "Uploading..." : "Add Recipe"}
+          </button>
         </form>
       )}
       <div className="challenges-list">
         {challenges.length > 0 ? (
           challenges.map(challenge => (
-            <Post key={challenge._id} challenge={challenge} challenges={challenges} setChallenges={setChallenges} />
+            <Post
+              key={challenge._id}
+              challenge={challenge}
+              challenges={challenges}
+              setChallenges={setChallenges}
+            />
           ))
-        ) : (<p>No challenges yet</p>)}
+        ) : (
+          <p>No challenges yet</p>
+        )}
       </div>
     </div>
   )
