@@ -12,6 +12,7 @@ import ForgotPassword from "./pages/ForgetPassword"
 import ResetPassword from "./pages/ResetPassword"
 import UserProfile from "./pages/UserProfile"
 import UserProfileEdit from "./pages/UserProfileEdit"
+import AllRecipes from "./pages/AllRecipes"
 import "./App.css"
 
 const App = () => {
@@ -60,7 +61,12 @@ const App = () => {
             element={<UserProfileEdit user={user} setUser={setUser} />}
           />
           {/* recipe routes */}
-          <Route path="/recipe/createRecipe" element={<Form recipes={recipes} setRecipes={setRecipes}/>} />
+          <Route
+            path="/recipe/createRecipe"
+            element={<Form recipes={recipes} setRecipes={setRecipes} />}
+          />
+
+
 
           {/* challenges routes */}
         </Routes>
