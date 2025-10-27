@@ -66,7 +66,10 @@ const App = () => {
             element={<Form recipes={recipes} setRecipes={setRecipes} />}
           />
 
-
+          <Route
+            path="/recipe"
+            element={<AllRecipes />} // Add this route
+          />
 
           {/* challenges routes */}
         </Routes>
