@@ -1,13 +1,15 @@
 import { useState } from "react"
 import { SignInUser } from "../services/Auth"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 
 const Login = ({ setUser }) => {
-  let navigate = useNavigate()
+  const navigate = useNavigate()
 
   const initialState = { email: "", password: "" }
 
   const [formValues, setFormValues] = useState(initialState)
+  const [error, setError] = useState("")
+  const [success, setSuccess] = useState("")
 
   const handleChange = (e) => {
     setFormValues({ ...formValues, [e.target.name]: e.target.value })
@@ -15,16 +17,35 @@ const Login = ({ setUser }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const userData = await SignInUser(formValues)
-    setFormValues(initialState)
-    setUser(userData)
-    navigate("/recipe/createRecipe")
+    setError("")
+    setSuccess("")
+
+    try {
+      const userData = await SignInUser(formValues)
+      setFormValues(initialState)
+      setUser(userData)
+
+      setSuccess("Login successful! Redirecting...")
+
+      // Redirect after short delay
+      setTimeout(() => {
+        navigate("/recipe/createRecipe")
+      }, 1500)
+    } catch (err) {
+      console.error("Login error:", err)
+      setError(
+        err.response?.data?.error ||
+          "Invalid email or password. Please try again."
+      )
+    }
   }
 
   return (
     <div className="col signin">
       <img src="/images/signin.png" alt="Sign In Title Image" />
+
       <form className="col" onSubmit={handleSubmit}>
+        {/* Email */}
         <div className="input-wrapper">
           <label htmlFor="email">Email</label>
           <input
@@ -37,21 +58,43 @@ const Login = ({ setUser }) => {
             autoComplete="email"
           />
         </div>
+
+        {/* Password */}
         <div className="input-wrapper">
           <label htmlFor="password">Password</label>
           <input
             name="password"
             type="password"
+            placeholder="password"
             onChange={handleChange}
             value={formValues.password}
             required
             autoComplete="off"
           />
         </div>
-        <button disabled={!formValues.email || !formValues.password}>
+
+        {/* Submit button */}
+        <button
+          type="submit"
+          disabled={!formValues.email || !formValues.password}
+        >
           Sign In
         </button>
+
+        {/* Feedback messages */}
+        {error && <p style={{ color: "red", marginTop: "0.5rem" }}>{error}</p>}
+        {success && (
+          <p style={{ color: "green", marginTop: "0.5rem" }}>{success}</p>
+        )}
       </form>
+
+      {/* Navigation links */}
+      <p>
+        Don’t have an account? <Link to="/signup">Sign up</Link>
+      </p>
+      <p>
+        <Link to="/forgot-password">Forgot your password?</Link>
+      </p>
     </div>
   )
 }
