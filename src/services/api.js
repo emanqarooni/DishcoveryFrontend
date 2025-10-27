@@ -11,7 +11,7 @@ Client.interceptors.request.use(
     const token = localStorage.getItem("token")
     // if the token exists, we set the authorization header
     if (token) {
-      config.headers["authorization"] = `Bearer ${token}`
+      config.headers["Authorization"] = `Bearer ${token}`
     }
     // We return the new config if the token exists or the default config if no token exists.
     return config
