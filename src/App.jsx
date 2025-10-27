@@ -40,12 +40,19 @@ const App = () => {
       <Nav user={user} handleLogOut={handleLogOut} />
       <main>
         <Routes>
+          {/* auth routes */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/auth/reset/:token" element={<ResetPassword />} />
+
+          {/* user routes */}
+
+          {/* recipe routes */}
           <Route path="/recipe/createRecipe" element={<Form />} />
+
+          {/* challenges routes */}
         </Routes>
       </main>
     </>
