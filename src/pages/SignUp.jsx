@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import { RegisterUser } from "../services/Auth"
 
 const Register = () => {
@@ -136,6 +136,10 @@ const Register = () => {
         {error && <p style={{ color: "red" }}>{error}</p>}
         {success && <p style={{ color: "green" }}>{success}</p>}
       </form>
+
+      {/* Link to login */}
+      <p>Already have an account?</p>
+      <Link to="/login">Login</Link>
     </div>
   )
 }
