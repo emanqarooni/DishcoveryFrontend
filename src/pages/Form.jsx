@@ -1,5 +1,5 @@
 import { useState } from "react"
-import {BASE_URL, Client} from "../services/api.js"
+import Client, { BASE_URL } from "../services/api.js"
 
 const Form = ({ recipes, setRecipes }) => {
   const initialState = {
@@ -42,14 +42,12 @@ const Form = ({ recipes, setRecipes }) => {
     }
 
     try {
-      const response = await Client.post(
-      `${BASE_URL}/recipe/createRecipe`
-      )
+      const response = await Client.post(`${BASE_URL}/recipe/createRecipe`)
       formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
-          }
+          },
         }
 
       // Update recipes list with the new recipe
