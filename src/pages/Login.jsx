@@ -8,6 +8,7 @@ const Login = ({ setUser }) => {
   const initialState = { email: "", password: "" }
 
   const [formValues, setFormValues] = useState(initialState)
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
 
@@ -49,6 +50,7 @@ const Login = ({ setUser }) => {
         <div className="input-wrapper">
           <label htmlFor="email">Email</label>
           <input
+            id="email"
             name="email"
             type="email"
             placeholder="example@example.com"
@@ -60,17 +62,20 @@ const Login = ({ setUser }) => {
         </div>
 
         {/* Password */}
-        <div className="input-wrapper">
-          <label htmlFor="password">Password</label>
+        <label htmlFor="password">Password</label>
+        <div>
           <input
+            id="password"
             name="password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="password"
             onChange={handleChange}
             value={formValues.password}
             required
-            autoComplete="off"
           />
+          <button type="button" onClick={() => setShowPassword(!showPassword)}>
+            {showPassword ? "Hide" : "Show"}
+          </button>
         </div>
 
         {/* Submit button */}
