@@ -24,12 +24,16 @@ const Challenges = () => {
   const [currentChallenge, setCurrentChallenge] = useState(null)
   const [winner, setWinner] = useState(null)
   const [timeLeft, setTimeLeft] = useState("")
-  const [userPostExists, setUserPostExists] = useState(false)
-  const userId = localStorage.getItem("userId") // تأكد عند تسجيل الدخول تخزن userId
+
   const getCurrentChallenge = () => {
     const now = new Date()
     return challengesData.find(c => new Date(c.startDate) <= now && now <= new Date(c.endDate)) || null
   }
+
+  const sortChallengesByLikes = (posts) => {
+    return [...posts].sort((a, b) => (b.likes?.length || 0) - (a.likes?.length || 0))
+  }
+
   const updateCountdown = () => {
     if (!currentChallenge) return
     const end = new Date(currentChallenge.endDate)
@@ -46,31 +50,25 @@ const Challenges = () => {
     const seconds = Math.floor((diff / 1000) % 60)
     setTimeLeft(`${days}d ${hours}h ${minutes}m ${seconds}s`)
   }
+
   const announceWinner = () => {
     if (!challenges || challenges.length === 0) return
-    const sorted = [...challenges].sort((a, b) => (b.likes?.length || 0) - (a.likes?.length || 0))
+    const sorted = sortChallengesByLikes(challenges)
     setWinner(sorted[0])
   }
+
   useEffect(() => {
     const loadChallenges = async () => {
       try {
         const response = await Client.get("/posts")
-        // فلترة البوستات حسب التحدي الحالي فقط
-        const activeChallenge = getCurrentChallenge()
-        let filtered = response.data
-        if (activeChallenge) {
-          filtered = response.data.filter(post => new Date(post.createdAt) >= new Date(activeChallenge.startDate) && new Date(post.createdAt) <= new Date(activeChallenge.endDate))
-        }
-        setChallenges(filtered)
-        // تحقق إذا المستخدم عنده بوست بالفعل
-        setUserPostExists(filtered.some(post => post.owner === userId))
+        setChallenges(sortChallengesByLikes(response.data))
       } catch (error) {
         console.error("Error fetching challenges:", error)
       }
     }
     loadChallenges()
-  }, [userId])
-  
+  }, [])
+
   useEffect(() => {
     const activeChallenge = getCurrentChallenge()
     setCurrentChallenge(activeChallenge)
@@ -80,12 +78,17 @@ const Challenges = () => {
       return () => clearInterval(interval)
     }
   }, [currentChallenge])
+
   const handleAddChallenge = async e => {
     e.preventDefault()
     if (!description || !image) {
       alert("Please provide both image and description")
       return
     }
+
+    const userId = localStorage.getItem("userId")
+    const existing = challenges.find(c => c.owner?._id === userId)
+    if (existing) return alert("You already added a post for this challenge")
     try {
       setLoading(true)
       const formData = new FormData()
@@ -94,17 +97,16 @@ const Challenges = () => {
       const response = await Client.post("/posts", formData, {
         headers: { "Content-Type": "multipart/form-data" }
       })
-      setChallenges([response.data, ...challenges])
+      setChallenges(sortChallengesByLikes([response.data, ...challenges]))
       setDescription("")
       setImage(null)
-      setUserPostExists(true)
       setLoading(false)
     } catch (error) {
       console.error("Error adding challenge:", error)
       setLoading(false)
     }
   }
-
+  
   return (
     <div className="challenges-page">
       <h1>{currentChallenge ? currentChallenge.month + " Challenge" : "No Active Challenge"}</h1>
@@ -117,7 +119,7 @@ const Challenges = () => {
           <p>{winner.likes?.length || 0} likes</p>
         </div>
       )}
-      {currentChallenge && !userPostExists && new Date() <= new Date(currentChallenge.endDate) && (
+      {currentChallenge && new Date() <= new Date(currentChallenge.endDate) && (
         <form className="add-challenge-form" onSubmit={handleAddChallenge}>
           <h3>Add Your Recipe</h3>
           <input type="file" accept="image/*" onChange={e => setImage(e.target.files[0])} />

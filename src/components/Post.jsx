@@ -3,41 +3,47 @@ import Client from "../services/api"
 import Comments from "./Comment"
 
 const Post = ({ challenge, challenges, setChallenges }) => {
-  const [liked, setLiked] = useState(challenge.likedByUser || false)
-  const [likesCount, setLikesCount] = useState(challenge.likesCount || 0)
-  const [comments, setComments] = useState(challenge.comments || [])
-
+  const [commentText, setCommentText] = useState("")
+  const [showComments, setShowComments] = useState(true)
   const handleLike = async () => {
     try {
       const response = await Client.post(`/posts/${challenge._id}/like`)
-      setLiked(response.data.likedByUser)
-      setLikesCount(response.data.likesCount)
+      const updatedChallenges = challenges.map(c => c._id === challenge._id ? response.data : c)
+      updatedChallenges.sort((a, b) => (b.likes?.length || 0) - (a.likes?.length || 0))
+      setChallenges(updatedChallenges)
     } catch (error) {
       console.error("Error liking post:", error)
     }
   }
-
-  const handleDelete = async () => {
-    if (!window.confirm("Are you sure you want to delete this challenge")) return
+  const handleAddComment = async (e) => {
+    e.preventDefault()
+    if (!commentText.trim()) return
     try {
-      await Client.delete(`/posts/${challenge._id}`)
-      setChallenges(challenges.filter(item => item._id !== challenge._id))
+      const response = await Client.post(`/posts/${challenge._id}/comments`, { text: commentText })
+      const updatedChallenges = challenges.map(c => c._id === challenge._id ? { ...c, comments: response.data.comments } : c)
+      setChallenges(updatedChallenges)
+      setCommentText("")
+      setShowComments(true)
     } catch (error) {
-      console.error("Error deleting challenge:", error)
+      console.error("Error adding comment:", error)
     }
   }
-
   return (
     <div className="post-card">
-      <img src={`${challenge.image}`} alt="Challenge" className="post-img" />
-      <div className="post-content">
-        <p>{challenge.description}</p>
-        <div className="post-actions">
-          <button onClick={handleLike}>{liked ? "Unlike" : "Like"} ({likesCount})</button>
-          <button onClick={handleDelete}>Delete</button>
-        </div>
-        <Comments postId={challenge._id} comments={comments} setComments={setComments} />
-      </div>
+      <img src={challenge.image} alt="Recipe" />
+      <p>{challenge.description}</p>
+      <p>{challenge.likes?.length || 0} Likes</p>
+      <button onClick={handleLike}>Like</button>
+      <form onSubmit={handleAddComment}>
+        <input
+          type="text"
+          placeholder="Add a comment..."
+          value={commentText}
+          onChange={e => setCommentText(e.target.value)}
+        />
+        <button type="submit">Post</button>
+      </form>
+      {showComments && <Comments comments={challenge.comments} />}
     </div>
   )
 }
