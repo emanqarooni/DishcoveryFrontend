@@ -35,7 +35,7 @@ const UserProfile = () => {
       <Link to={`/users/${userId}/edit`}>
         <button>Edit profile</button>
       </Link>
-      <Link to="/update-password">
+      <Link to={`/auth/update/${userId}`}>
         <button>Update password</button>
       </Link>
 
