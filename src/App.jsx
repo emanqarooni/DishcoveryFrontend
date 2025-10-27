@@ -17,6 +17,8 @@ import "./App.css"
 const App = () => {
   const [user, setUser] = useState(null)
 
+  const [recipes, setRecipes] = useState([])
+
   const checkToken = async () => {
     try {
       const userData = await CheckSession()
@@ -58,7 +60,7 @@ const App = () => {
             element={<UserProfileEdit user={user} setUser={setUser} />}
           />
           {/* recipe routes */}
-          <Route path="/recipe/createRecipe" element={<Form />} />
+          <Route path="/recipe/createRecipe" element={<Form recipes={recipes} setRecipes={setRecipes}/>} />
 
           {/* challenges routes */}
         </Routes>
