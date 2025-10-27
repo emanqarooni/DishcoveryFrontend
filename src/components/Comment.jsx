@@ -1,6 +1,5 @@
 import { useState } from "react"
 import Client from "../services/api"
-import Post from "./Post"
 
 const Comments = ({ postId, comments, setComments }) => {
   const [newComment, setNewComment] = useState("")
