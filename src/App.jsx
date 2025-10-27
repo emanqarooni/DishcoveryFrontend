@@ -8,12 +8,20 @@ import Login from "./pages/Login"
 import Home from "./pages/Home"
 import Form from "./pages/Form"
 import Challenges from "./pages/Challenges"
+import ForgotPassword from "./pages/ForgetPassword"
+import ResetPassword from "./pages/ResetPassword"
+import UserProfile from "./pages/UserProfile"
+import UserProfileEdit from "./pages/UserProfileEdit"
+import UpdatePassword from "./pages/UpdatePassword"
+import Challenges from "./pages/Challenges"
 
 import "./App.css"
 
 
 const App = () => {
   const [user, setUser] = useState(null)
+
+  const [recipes, setRecipes] = useState([])
 
   const checkToken = async () => {
     try {
@@ -39,9 +47,31 @@ const App = () => {
     <Nav user={user} handleLogOut={handleLogOut} />
       <main>
         <Routes>
+          {/* auth routes */}
           <Route path="/" element={<Home />} />
-          <Route path="/signin" element={<Login setUser={setUser} />} />
+          <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/auth/reset/:token" element={<ResetPassword />} />
+
+          {/* user routes */}
+          <Route
+            path="/users/:userId"
+            element={<UserProfile user={user} setUser={setUser} />}
+          />
+          <Route
+            path="/users/:userId/edit"
+            element={<UserProfileEdit user={user} setUser={setUser} />}
+          />
+          <Route
+            path="/auth/update/:id"
+            element={<UpdatePassword user={user} setUser={setUser} />}
+          />
+
+          {/* recipe routes */}
+          <Route path="/recipe/createRecipe" element={<Form recipes={recipes} setRecipes={setRecipes}/>} />
+
+          {/* challenges routes */}
           <Route path="/recipe/createRecipe" element={<Form />} />
           <Route path="/challenges" element={<Challenges/>} />
         </Routes>

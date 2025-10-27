@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import Post from "../components/Post"
 import Client from "../services/api"
+
 const challengesData = [
   { month: "January", startDate: "2025-01-01T00:00:00", endDate: "2025-01-31T23:59:59" },
   { month: "February", startDate: "2025-02-01T00:00:00", endDate: "2025-02-28T23:59:59" },
@@ -69,6 +70,7 @@ const Challenges = () => {
     }
     loadChallenges()
   }, [userId])
+  
   useEffect(() => {
     const activeChallenge = getCurrentChallenge()
     setCurrentChallenge(activeChallenge)
@@ -95,13 +97,14 @@ const Challenges = () => {
       setChallenges([response.data, ...challenges])
       setDescription("")
       setImage(null)
-      setUserPostExists(true) // علامة أنه المستخدم أضاف بوست بالفعل
+      setUserPostExists(true)
       setLoading(false)
     } catch (error) {
       console.error("Error adding challenge:", error)
       setLoading(false)
     }
   }
+
   return (
     <div className="challenges-page">
       <h1>{currentChallenge ? currentChallenge.month + " Challenge" : "No Active Challenge"}</h1>
