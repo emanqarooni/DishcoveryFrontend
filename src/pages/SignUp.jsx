@@ -117,7 +117,7 @@ const Register = () => {
           </select>
         </div>
 
-        {/* Submit */}
+        {/* Submit button*/}
         <button
           type="submit"
           disabled={

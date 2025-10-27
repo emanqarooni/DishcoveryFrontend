@@ -1,4 +1,5 @@
-const { useState } = require("react")
+import { useState } from "react"
+import Client, { BASE_URL } from "../services/api.js"
 
 const Form = ({ recipes, setRecipes }) => {
   const initialState = {
@@ -17,13 +18,12 @@ const Form = ({ recipes, setRecipes }) => {
   const [imageFile, setImageFile] = useState(null)
 
   const handleChange = (event) => {
+    // const { id } = event.target
     setRecipeState({ ...recipeState, [event.target.name]: event.target.value })
   }
 
   const handleFileChange = (event) => {
     setImageFile(event.target.files[0])
-    const { id } = event.target
-    setRecipeState({})
   }
 
   const handleSubmit = async (event) => {
@@ -32,7 +32,7 @@ const Form = ({ recipes, setRecipes }) => {
     const formData = new FormData()
     const token = localStorage.getItem("token")
 
-    Object.entries(postState).forEach(([key, value]) => {
+    Object.entries(recipeState).forEach(([key, value]) => {
       formData.append(key, value)
     })
 
@@ -42,19 +42,20 @@ const Form = ({ recipes, setRecipes }) => {
     }
 
     try {
-      const response = await axios.post(
-        " http://localhost:3000/recipe/createRecipe",
-        formData,
+      const response = await Client.post(`${BASE_URL}/recipe/createRecipe`)
+      formData,
         {
-          headers: { "Content-Type": "multipart/form-data" },
-          Authorization: `Bearer ${token}`,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
-      )
 
-      let recipeList = [...recipes]
-      recipeList.push(response.data)
-      setRecipeState(recipeList)
-      set(initialState)
+      // Update recipes list with the new recipe
+      const recipeList = [...recipes, response.data]
+      setRecipes(recipeList)
+
+      // Reset form
+      setRecipeState(initialState)
       setImageFile(null)
     } catch (error) {
       console.error("Error creating recipe:", error)
@@ -70,30 +71,38 @@ const Form = ({ recipes, setRecipes }) => {
         name="title"
         onChange={handleChange}
         value={recipeState.title}
+        required
       />
+
       <label htmlFor="description">Description</label>
-      <input
-        type="textarea"
+      <textarea
+        id="description"
         name="description"
         onChange={handleChange}
         value={recipeState.description}
+        required
       />
+
       <label htmlFor="ingredients">Ingredients</label>
-      <input
+      <textarea
         id="ingredients"
-        type="textarea"
         name="ingredients"
         onChange={handleChange}
         value={recipeState.ingredients}
+        placeholder="Separate ingredients with commas or line breaks"
+        required
       />
-      <label htmlFor="image">Upload image</label>
+
+      <label htmlFor="image">Upload Image</label>
       <input
         id="image"
         type="file"
         name="image"
-        onChange={handleChange}
-        value={recipeState.image}
+        onChange={handleFileChange}
+        accept="image/*"
+        required
       />
+
       <label htmlFor="preparingTime">Preparing Time</label>
       <input
         id="preparingTime"
@@ -101,7 +110,9 @@ const Form = ({ recipes, setRecipes }) => {
         name="preparingTime"
         onChange={handleChange}
         value={recipeState.preparingTime}
+        placeholder="e.g., 15 minutes"
       />
+
       <label htmlFor="cookingTime">Cooking Time</label>
       <input
         id="cookingTime"
@@ -109,7 +120,9 @@ const Form = ({ recipes, setRecipes }) => {
         name="cookingTime"
         onChange={handleChange}
         value={recipeState.cookingTime}
+        placeholder="e.g., 30 minutes"
       />
+
       <label htmlFor="servings">Servings</label>
       <input
         id="servings"
@@ -117,15 +130,30 @@ const Form = ({ recipes, setRecipes }) => {
         name="servings"
         onChange={handleChange}
         value={recipeState.servings}
+        min="1"
       />
+
       <label htmlFor="category">Category</label>
-      <input
+      <select
         id="category"
-        type="text"
         name="category"
         onChange={handleChange}
         value={recipeState.category}
-      />
+        required
+      >
+        <option value="">Select a category</option>
+        <option value="European">European</option>
+        <option value="Healthy">Healthy</option>
+        <option value="Mexican">Mexican</option>
+        <option value="Arabic">Arabic</option>
+        <option value="American">American</option>
+        <option value="Indian">Indian</option>
+        <option value="African">African</option>
+        <option value="EastAsian">East Asian</option>
+        <option value="Turkish">Turkish</option>
+      </select>
+
+      <button type="submit">Create Recipe</button>
     </form>
   )
 }
