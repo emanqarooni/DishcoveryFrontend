@@ -1,7 +1,10 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { RegisterUser } from "../services/Auth"
 
 const Register = () => {
+  const navigate = useNavigate()
+
   const initialState = {
     username: "",
     email: "",
@@ -25,16 +28,20 @@ const Register = () => {
 
     try {
       const res = await RegisterUser(formValues)
-      setSuccess("Registration successful!")
       console.log("Registered user:", res)
+
+      setSuccess("Registration successful! Redirecting to login...")
       setFormValues(initialState)
+
+      // Wait a moment before redirecting so user can see the message
+      setTimeout(() => {
+        navigate("/signin")
+      }, 1500)
     } catch (err) {
-      console.error(err)
-      if (err.response?.data?.error) {
-        setError(err.response.data.error)
-      } else {
-        setError("Registration failed. Please try again.")
-      }
+      console.error("Registration error:", err)
+      setError(
+        err.response?.data?.error || "Registration failed. Please try again."
+      )
     }
   }
 
@@ -53,7 +60,6 @@ const Register = () => {
             onChange={handleChange}
             value={formValues.username}
             required
-            autoComplete="username"
           />
         </div>
 
@@ -67,7 +73,6 @@ const Register = () => {
             onChange={handleChange}
             value={formValues.email}
             required
-            autoComplete="email"
           />
         </div>
 
@@ -81,7 +86,6 @@ const Register = () => {
             onChange={handleChange}
             value={formValues.password}
             required
-            autoComplete="off"
           />
         </div>
 
@@ -95,7 +99,6 @@ const Register = () => {
             onChange={handleChange}
             value={formValues.confirmPassword}
             required
-            autoComplete="off"
           />
         </div>
 
