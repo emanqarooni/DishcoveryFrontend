@@ -10,7 +10,7 @@ import Form from "./pages/Form"
 import Challenges from "./pages/Challenges"
 import ForgotPassword from "./pages/ForgetPassword"
 import ResetPassword from "./pages/ResetPassword"
-
+import UserProfile from "./pages/UserProfile"
 import "./App.css"
 
 const App = () => {
@@ -40,12 +40,22 @@ const App = () => {
       <Nav user={user} handleLogOut={handleLogOut} />
       <main>
         <Routes>
+          {/* auth routes */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/auth/reset/:token" element={<ResetPassword />} />
+
+          {/* user routes */}
+          <Route
+            path="/users/:userId"
+            element={<UserProfile user={user} setUser={setUser} />}
+          />
+          {/* recipe routes */}
           <Route path="/recipe/createRecipe" element={<Form />} />
+
+          {/* challenges routes */}
         </Routes>
       </main>
     </>

@@ -30,7 +30,7 @@ const Login = ({ setUser }) => {
 
       // Redirect after short delay
       setTimeout(() => {
-        navigate("/recipe/createRecipe")
+        navigate(`/users/${userData.id}`)
       }, 1500)
     } catch (err) {
       console.error("Login error:", err)
