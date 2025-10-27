@@ -20,6 +20,15 @@ export const SignInUser = async (data) => {
   }
 }
 
+export const ForgotPasswordService = async (data) => {
+  try {
+    const res = await Client.post("/auth/forgot-password", data)
+    return res.data
+  } catch (error) {
+    throw error.response?.data || { error: "Server error" }
+  }
+}
+
 export const CheckSession = async () => {
   try {
     const res = await Client.get("/auth/session")
