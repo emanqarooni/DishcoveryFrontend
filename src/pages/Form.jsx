@@ -73,7 +73,7 @@ const Form = ({ recipes, setRecipes }) => {
       />
       <label htmlFor="description">Description</label>
       <input
-        type="text"
+        type="textarea"
         name="description"
         onChange={handleChange}
         value={recipeState.description}
@@ -81,7 +81,7 @@ const Form = ({ recipes, setRecipes }) => {
       <label htmlFor="ingredients">Ingredients</label>
       <input
         id="ingredients"
-        type="text"
+        type="textarea"
         name="ingredients"
         onChange={handleChange}
         value={recipeState.ingredients}
@@ -113,7 +113,7 @@ const Form = ({ recipes, setRecipes }) => {
       <label htmlFor="servings">Servings</label>
       <input
         id="servings"
-        type="text"
+        type="number"
         name="servings"
         onChange={handleChange}
         value={recipeState.servings}
@@ -126,22 +126,6 @@ const Form = ({ recipes, setRecipes }) => {
         onChange={handleChange}
         value={recipeState.category}
       />
-      <label htmlFor="favouritedByUsers">Add to Favorite List</label>
-      <input
-        id="favouritedByUsers"
-        type="text"
-        name="favouritedByUsers"
-        onChange={handleChange}
-        value={recipeState.favouritedByUsers}
-      />
-`      <label htmlFor="ratings">Rating: </label>
-      <input
-        id="ratings"
-        type="text"
-        name="ratings"
-        onChange={handleChange}
-        value={recipeState.ratings}
-      />`
     </form>
   )
 }
