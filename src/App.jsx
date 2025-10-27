@@ -10,7 +10,7 @@ import Form from "./pages/Form"
 import Challenges from "./pages/Challenges"
 import ForgotPassword from "./pages/ForgetPassword"
 import ResetPassword from "./pages/ResetPassword"
-
+import UserProfile from "./pages/UserProfile"
 import "./App.css"
 
 const App = () => {
@@ -48,7 +48,10 @@ const App = () => {
           <Route path="/auth/reset/:token" element={<ResetPassword />} />
 
           {/* user routes */}
-
+          <Route
+            path="/users/:userId"
+            element={<UserProfile user={user} setUser={setUser} />}
+          />
           {/* recipe routes */}
           <Route path="/recipe/createRecipe" element={<Form />} />
 
