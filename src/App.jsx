@@ -1,24 +1,47 @@
-import { Routes, Route, Navigate } from "react-router-dom"
-import Register from "./pages/SignUp" // adjust path if your file is elsewhere
+import { useState, useEffect } from "react"
+import { Route, Routes } from "react-router"
+import { CheckSession } from "./services/Auth"
+
+import Nav from "./components/Nav"
+import Register from "./pages/Register"
+import SignIn from "./pages/SignIn"
+import Home from "./pages/Home"
+
 import "./App.css"
 
 const App = () => {
+  const [user, setUser] = useState(null)
+
+  const checkToken = async () => {
+    try {
+      const userData = await CheckSession()
+      setUser(userData)
+    } catch (error) {
+      console.error("Session check failed:", error)
+    }
+  }
+
+  const handleLogOut = () => {
+    setUser(null)
+    localStorage.clear()
+  }
+
+  useEffect(() => {
+    const token = localStorage.getItem("token")
+    if (token) checkToken()
+  }, [])
+
   return (
-    <div className="App">
-      <Routes>
-        {/* Default route redirects to Register */}
-        <Route path="/" element={<Navigate to="/register" replace />} />
-
-        {/* Register Page */}
-        <Route path="/register" element={<Register />} />
-
-        {/* Placeholder for Login Page */}
-        <Route path="/login" element={<h2>Login Page (Coming Soon)</h2>} />
-
-        {/* 404 Fallback */}
-        <Route path="*" element={<h2>404 - Page Not Found</h2>} />
-      </Routes>
-    </div>
+    <>
+      <Nav user={user} handleLogOut={handleLogOut} />
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/signin" element={<SignIn setUser={setUser} />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </main>
+    </>
   )
 }
 
