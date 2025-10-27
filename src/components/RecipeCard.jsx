@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router"
 import Client, { BASE_URL } from "../services/api.js"
+import { Link } from "react-router-dom"
 
 const RecipeCard = ({ recipe }) => {
   const navigate = useNavigate()
