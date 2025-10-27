@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router"
 import { CheckSession } from "./services/Auth"
 
 import Nav from "./components/Nav"
-import SignUp from "./pages/SignUp"
+import Register from "./pages/SignUp"
 import Login from "./pages/Login"
 import Home from "./pages/Home"
 import Form from "./pages/Form"
@@ -41,7 +41,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<Login setUser={setUser} />} />
-          <Route path="/register" element={<SignUp />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/recipe/createRecipe" element={<Form />} />
         </Routes>
       </main>
