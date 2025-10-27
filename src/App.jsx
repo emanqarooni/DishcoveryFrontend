@@ -9,6 +9,8 @@ import Home from "./pages/Home"
 
 import "./App.css"
 
+import Challenges from "./pages/Challenges"
+
 const App = () => {
   const [user, setUser] = useState(null)
 
