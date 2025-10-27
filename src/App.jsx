@@ -3,8 +3,8 @@ import { Route, Routes } from "react-router"
 import { CheckSession } from "./services/Auth"
 
 import Nav from "./components/Nav"
-import Register from "./pages/Register"
-import SignIn from "./pages/SignIn"
+import SignUp from "./pages/SignUp"
+import Login from "./pages/Login"
 import Home from "./pages/Home"
 
 import "./App.css"
@@ -39,8 +39,8 @@ const App = () => {
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/signin" element={<SignIn setUser={setUser} />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/signin" element={<Login setUser={setUser} />} />
+          <Route path="/register" element={<SignUp />} />
         </Routes>
       </main>
     </>
