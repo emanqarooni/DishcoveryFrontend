@@ -7,10 +7,10 @@ import Register from "./pages/SignUp"
 import Login from "./pages/Login"
 import Home from "./pages/Home"
 import Form from "./pages/Form"
+import Challenges from "./pages/Challenges"
+import ForgotPassword from "./pages/ForgetPassword"
 
 import "./App.css"
-
-import Challenges from "./pages/Challenges"
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -42,6 +42,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/recipe/createRecipe" element={<Form />} />
         </Routes>
       </main>
