@@ -6,6 +6,7 @@ import Nav from "./components/Nav"
 import Register from "./pages/SignUp"
 import Login from "./pages/Login"
 import Home from "./pages/Home"
+import Form from "./pages/Form"
 
 import "./App.css"
 
@@ -41,6 +42,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<Login setUser={setUser} />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/recipe/createRecipe" element={<Form />} />
         </Routes>
       </main>
     </>
