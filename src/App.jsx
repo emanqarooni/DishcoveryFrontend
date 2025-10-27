@@ -14,6 +14,7 @@ import UserProfile from "./pages/UserProfile"
 import UserProfileEdit from "./pages/UserProfileEdit"
 import AllRecipes from "./pages/AllRecipes"
 import MyRecipes from "./pages/MyRecipes"
+import Details from "./pages/Details"
 import UpdatePassword from "./pages/UpdatePassword"
 import "./App.css"
 
@@ -75,6 +76,7 @@ const App = () => {
 
           <Route path="/recipe" element={<AllRecipes />} />
           <Route path="/recipe/myRecipes" element={<MyRecipes />} />
+          <Route path="/recipe/:recipeId" element={<Details />} />
 
           {/* challenges routes */}
         </Routes>
