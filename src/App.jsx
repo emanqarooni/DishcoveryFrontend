@@ -13,6 +13,7 @@ import ResetPassword from "./pages/ResetPassword"
 import UserProfile from "./pages/UserProfile"
 import UserProfileEdit from "./pages/UserProfileEdit"
 import AllRecipes from "./pages/AllRecipes"
+import MyRecipes from "./pages/MyRecipes"
 import UpdatePassword from "./pages/UpdatePassword"
 import "./App.css"
 
@@ -72,10 +73,8 @@ const App = () => {
             element={<Form recipes={recipes} setRecipes={setRecipes} />}
           />
 
-          <Route
-            path="/recipe"
-            element={<AllRecipes />} // Add this route
-          />
+          <Route path="/recipe" element={<AllRecipes />} />
+          <Route path="/recipe/myRecipes" element={<MyRecipes />} />
 
           {/* challenges routes */}
         </Routes>
