@@ -1,5 +1,6 @@
 import { useState } from "react"
 import Client from "../services/api.js"
+import { Link } from "react-router-dom"
 
 const Form = ({ recipes, setRecipes }) => {
   const initialState = {
@@ -71,7 +72,6 @@ const Form = ({ recipes, setRecipes }) => {
       setTimeout(() => {
         setSuccess("")
       }, 5000)
-
     } catch (error) {
       console.error("Error creating recipe:", error)
 
@@ -101,10 +101,7 @@ const Form = ({ recipes, setRecipes }) => {
           <div className="popup-content">
             <span className="popup-icon">✓</span>
             <span>{success}</span>
-            <button
-              onClick={() => setSuccess("")}
-              className="popup-close"
-            >
+            <button onClick={() => setSuccess("")} className="popup-close">
               ×
             </button>
           </div>
@@ -117,15 +114,16 @@ const Form = ({ recipes, setRecipes }) => {
           <div className="popup-content">
             <span className="popup-icon">⚠</span>
             <span>{error}</span>
-            <button
-              onClick={() => setError("")}
-              className="popup-close"
-            >
+            <button onClick={() => setError("")} className="popup-close">
               ×
             </button>
           </div>
         </div>
       )}
+
+      <Link to="/recipe">
+        <button type="button">Go to Recipes</button>
+      </Link>
 
       <form onSubmit={handleSubmit} className="recipeForm">
         <label htmlFor="title">Title</label>
@@ -221,19 +219,6 @@ const Form = ({ recipes, setRecipes }) => {
           {loading ? "Creating..." : "Create Recipe"}
         </button>
       </form>
-
-      <style>{`
-        @keyframes slideIn {
-          from {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-      `}</style>
     </div>
   )
 }
