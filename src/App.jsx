@@ -11,6 +11,7 @@ import Challenges from "./pages/Challenges"
 import ForgotPassword from "./pages/ForgetPassword"
 import ResetPassword from "./pages/ResetPassword"
 import UserProfile from "./pages/UserProfile"
+import UserProfileEdit from "./pages/UserProfileEdit"
 import "./App.css"
 
 const App = () => {
@@ -51,6 +52,10 @@ const App = () => {
           <Route
             path="/users/:userId"
             element={<UserProfile user={user} setUser={setUser} />}
+          />
+          <Route
+            path="/users/:userId/edit"
+            element={<UserProfileEdit user={user} setUser={setUser} />}
           />
           {/* recipe routes */}
           <Route path="/recipe/createRecipe" element={<Form />} />

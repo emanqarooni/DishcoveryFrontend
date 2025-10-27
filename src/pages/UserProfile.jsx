@@ -32,7 +32,7 @@ const UserProfile = () => {
       <h4>Username: {user.username}</h4>
       <h4>Email: {user.email}</h4>
 
-      <Link to={`/user-profile/edit/${userId}`}>
+      <Link to={`/users/${userId}/edit`}>
         <button>Edit profile</button>
       </Link>
       <Link to="/update-password">
