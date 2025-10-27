@@ -12,6 +12,7 @@ import ForgotPassword from "./pages/ForgetPassword"
 import ResetPassword from "./pages/ResetPassword"
 import UserProfile from "./pages/UserProfile"
 import UserProfileEdit from "./pages/UserProfileEdit"
+import UpdatePassword from "./pages/UpdatePassword"
 import "./App.css"
 
 const App = () => {
@@ -57,6 +58,11 @@ const App = () => {
             path="/users/:userId/edit"
             element={<UserProfileEdit user={user} setUser={setUser} />}
           />
+          <Route
+            path="/auth/update/:id"
+            element={<UpdatePassword user={user} setUser={setUser} />}
+          />
+
           {/* recipe routes */}
           <Route path="/recipe/createRecipe" element={<Form />} />
 
