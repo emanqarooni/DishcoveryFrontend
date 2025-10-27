@@ -1,5 +1,5 @@
 import { useState } from "react"
-import {BASE_URL, Client} from "../services/api.js"
+import Client, { BASE_URL } from "../services/api.js"
 
 const Form = ({ recipes, setRecipes }) => {
   const initialState = {
