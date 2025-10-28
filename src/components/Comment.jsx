@@ -122,7 +122,7 @@ const Comments = ({
             ...c,
             comments: c.comments.map((comment) =>
               comment._id === commentId
-                ? { ...comment, replies: data.replies } // replies من السيرفر
+                ? { ...comment, replies: data.replies }
                 : comment
             ),
           }
@@ -144,7 +144,7 @@ const Comments = ({
     <div className="comments-section">
       {comments && comments.length > 0 ? (
         comments.map((c) => {
-          console.log("userId:", userId, "comment owner:", c.owner)
+          // console.log("userId:", userId, "comment owner:", c.owner)
 
           return (
             <div key={c._id} className="comment">

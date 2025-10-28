@@ -1,8 +1,8 @@
 import { useState } from "react"
-import Client from "../services/api"
+import Client, { BASE_URL } from "../services/api"
 import Comments from "./Comment"
 
-const Post = ({ challenge, challenges, setChallenges }) => {
+const Post = ({ challenge, challenges, setChallenges, user }) => {
   const [commentText, setCommentText] = useState("")
   const [showComments, setShowComments] = useState(true)
 
@@ -54,32 +54,25 @@ const Post = ({ challenge, challenges, setChallenges }) => {
   return (
     <div className="post-card">
       {/* Owner Info */}
+{      console.log(user)}
       {challenge.owner && (
         <div className="post-owner">
           <img
-            src={
-              `http://localhost:3000/${challenge.owner.image}` ||
-              "/default-avatar.png"
-            }
-            alt={challenge.owner.username || "User"}
+            src={`${BASE_URL}/${user.image}` || "/default-avatar.png"}
+            alt={user.username || "User"}
             className="owner-avatar"
           />
-          <span className="owner-name">
-            by {challenge.owner.username || "User"}
-          </span>
+          <span className="owner-name">by {user.username || "User"}</span>
         </div>
       )}
-
       <img
-        src={`http://localhost:3000${challenge.image}`}
+        src={`${BASE_URL}${challenge.image}`}
         alt="Recipe"
         className="post-image"
       />
       <p>{challenge.description}</p>
       <p>{challenge.likes?.length || 0} Likes</p>
-
       <button onClick={handleLike}>Like</button>
-
       <form onSubmit={handleAddComment}>
         <input
           type="text"
@@ -89,7 +82,6 @@ const Post = ({ challenge, challenges, setChallenges }) => {
         />
         <button type="submit">Post</button>
       </form>
-
       {showComments && (
         <Comments
           comments={challenge.comments}

@@ -96,7 +96,7 @@ const App = () => {
 
           {/* challenges routes */}
           <Route path="/recipe/createRecipe" element={<Form />} />
-          <Route path="/challenges" element={<Challenges/>} />
+          <Route path="/challenges" element={<Challenges user={user}/>} />
         </Routes>
       </main>
     </>
