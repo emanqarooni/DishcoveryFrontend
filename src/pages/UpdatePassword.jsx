@@ -5,6 +5,9 @@ import Client from "../services/api"
 const UpdatePassword = () => {
   const { id } = useParams()
   const navigate = useNavigate()
+  const [showOldPassword, setShowOldPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const [formData, setFormData] = useState({
     oldPassword: "",
@@ -77,36 +80,54 @@ const UpdatePassword = () => {
           <label htmlFor="oldPassword">Old Password:</label>
           <input
             id="oldPassword"
-            type="password"
+            type={showOldPassword ? "text" : "password"}
             name="oldPassword"
             value={formData.oldPassword}
             onChange={handleChange}
             required
           />
+          <button
+            type="button"
+            onClick={() => setShowOldPassword(!showOldPassword)}
+          >
+            {showOldPassword ? "Hide" : "Show"}
+          </button>
         </div>
 
         <div>
           <label htmlFor="newPassword">New Password:</label>
           <input
             id="newPassword"
-            type="password"
+            type={showNewPassword ? "text" : "password"}
             name="newPassword"
             value={formData.newPassword}
             onChange={handleChange}
             required
           />
+          <button
+            type="button"
+            onClick={() => setShowNewPassword(!showNewPassword)}
+          >
+            {showNewPassword ? "Hide" : "Show"}
+          </button>
         </div>
 
         <div>
           <label htmlFor="confirmPassword">Confirm New Password:</label>
           <input
             id="confirmPassword"
-            type="password"
+            type={showConfirmPassword ? "text" : "password"}
             name="confirmPassword"
             value={formData.confirmPassword}
             onChange={handleChange}
             required
           />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+          >
+            {showConfirmPassword ? "Hide" : "Show"}
+          </button>
         </div>
 
         <button type="submit">Update Password</button>

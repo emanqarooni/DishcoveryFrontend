@@ -11,6 +11,9 @@ import ForgotPassword from "./pages/ForgetPassword"
 import ResetPassword from "./pages/ResetPassword"
 import UserProfile from "./pages/UserProfile"
 import UserProfileEdit from "./pages/UserProfileEdit"
+import AllRecipes from "./pages/AllRecipes"
+import MyRecipes from "./pages/MyRecipes"
+import Details from "./pages/Details"
 import UpdatePassword from "./pages/UpdatePassword"
 import Challenges from "./pages/Challenges"
 
@@ -68,7 +71,14 @@ const App = () => {
           />
 
           {/* recipe routes */}
-          <Route path="/recipe/createRecipe" element={<Form recipes={recipes} setRecipes={setRecipes}/>} />
+          <Route
+            path="/recipe/createRecipe"
+            element={<Form recipes={recipes} setRecipes={setRecipes} />}
+          />
+
+          <Route path="/recipe" element={<AllRecipes />} />
+          <Route path="/recipe/myRecipes" element={<MyRecipes />} />
+          <Route path="/recipe/:recipeId" element={<Details />} />
 
           {/* challenges routes */}
           <Route path="/recipe/createRecipe" element={<Form />} />
