@@ -6,7 +6,10 @@ const Post = ({ challenge, challenges, setChallenges }) => {
   const [commentText, setCommentText] = useState("")
   const [showComments, setShowComments] = useState(true)
 
-  //liking post
+  // get current user (from localStorage or context)
+  const currentUser = JSON.parse(localStorage.getItem("user"))
+
+  // handle like
   const handleLike = async () => {
     try {
       const response = await Client.post(`/posts/${challenge._id}/like`)
@@ -22,7 +25,7 @@ const Post = ({ challenge, challenges, setChallenges }) => {
     }
   }
 
-  //add comment handler
+  // add comment handler
   const handleAddComment = async (e) => {
     e.preventDefault()
     if (!commentText.trim()) return
@@ -67,7 +70,15 @@ const Post = ({ challenge, challenges, setChallenges }) => {
         <button type="submit">Post</button>
       </form>
 
-      {showComments && <Comments comments={challenge.comments} />}
+      {showComments && (
+        <Comments
+          comments={challenge.comments}
+          challenge={challenge}
+          challenges={challenges}
+          setChallenges={setChallenges}
+          currentUser={currentUser} 
+        />
+      )}
     </div>
   )
 }
