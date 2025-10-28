@@ -95,7 +95,7 @@ const Login = ({ setUser }) => {
 
       {/* Navigation links */}
       <p>
-        Don’t have an account? <Link to="/signup">Sign up</Link>
+        Don’t have an account? <Link to="/register">Sign up</Link>
       </p>
       <p>
         <Link to="/forgot-password">Forgot your password?</Link>

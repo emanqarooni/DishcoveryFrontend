@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Route, Routes } from "react-router"
+import { Route, Routes, useLocation } from "react-router"
 import { CheckSession } from "./services/Auth"
 
 import Nav from "./components/Nav"
@@ -23,6 +23,8 @@ const App = () => {
 
   const [recipes, setRecipes] = useState([])
 
+  const location = useLocation()
+
   const checkToken = async () => {
     try {
       const userData = await CheckSession()
@@ -42,9 +44,22 @@ const App = () => {
     if (token) checkToken()
   }, [])
 
+  const hideSidebarRoutes = [
+    "/login",
+    "/register",
+    "/forgot-password",
+    "/auth/reset",
+  ]
+
+  const shouldHideSidebar = hideSidebarRoutes.some((path) =>
+    location.pathname.startsWith(path)
+  )
+
   return (
     <>
-      <Nav user={user} handleLogOut={handleLogOut} />
+      {!shouldHideSidebar && user && (
+        <Nav user={user} handleLogOut={handleLogOut} />
+      )}
       <main>
         <Routes>
           {/* auth routes */}
