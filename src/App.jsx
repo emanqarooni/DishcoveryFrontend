@@ -17,6 +17,7 @@ import UserProfile from "./pages/UserProfile"
 import UserProfileEdit from "./pages/UserProfileEdit"
 import UpdatePassword from "./pages/UpdatePassword"
 import Explore from "./pages/Explore"
+import ExploreDetails from "./pages/ExploreDetails"
 import "./App.css"
 
 const App = () => {
@@ -104,6 +105,7 @@ const App = () => {
 
           {/* explore routes */}
           <Route path="/explore" element={<Explore />} />
+          <Route path="/explore/:mealId" element={<ExploreDetails />} />
         </Routes>
       </main>
     </>
