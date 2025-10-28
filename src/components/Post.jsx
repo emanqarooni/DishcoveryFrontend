@@ -76,7 +76,7 @@ const Post = ({ challenge, challenges, setChallenges }) => {
           challenge={challenge}
           challenges={challenges}
           setChallenges={setChallenges}
-          currentUser={currentUser} 
+          currentUser={currentUser}
         />
       )}
     </div>
