@@ -108,13 +108,13 @@ const Comments = ({
   }
 
   // Add reply
-  const handleAddReply = (commentId) => {
-    if (!replyText.trim()) return
-    const newReply = {
-      _id: Date.now().toString(),
+ const handleAddReply = async (commentId) => {
+  if (!replyText.trim()) return
+
+  try {
+    const { data } = await Client.post(`/comment/${commentId}/reply`, {
       comment: replyText,
-      owner: currentUser,
-    }
+    })
 
     const updatedChallenges = challenges.map((c) =>
       c._id === challenge._id
@@ -122,10 +122,7 @@ const Comments = ({
             ...c,
             comments: c.comments.map((comment) =>
               comment._id === commentId
-                ? {
-                    ...comment,
-                    replies: [...(comment.replies || []), newReply],
-                  }
+                ? { ...comment, replies: data.replies }
                 : comment
             ),
           }
@@ -135,7 +132,11 @@ const Comments = ({
     setChallenges(updatedChallenges)
     setReplyingCommentId(null)
     setReplyText("")
+  } catch (error) {
+    console.error("Error adding reply:", error)
+    alert("Error adding reply")
   }
+}
 
   const userId = getCurrentUserId()
 
@@ -143,7 +144,7 @@ const Comments = ({
     <div className="comments-section">
       {comments && comments.length > 0 ? (
         comments.map((c) => {
-          console.log("userId:", userId, "comment owner:", c.owner)
+          // console.log("userId:", userId, "comment owner:", c.owner)
 
           return (
             <div key={c._id} className="comment">
