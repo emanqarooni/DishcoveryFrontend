@@ -15,8 +15,6 @@ const UserProfileEdit = () => {
   const [message, setMessage] = useState("")
   const [error, setError] = useState("")
 
-  const emailValidation = /^[a-zA-Z0-9._%+-]+@gmail\.com$/
-
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -56,11 +54,6 @@ const UserProfileEdit = () => {
     setError("")
     setMessage("")
 
-    if (!emailValidation.test(formData.email)) {
-      setError("Please enter a valid Gmail address (e.g., name@gmail.com).")
-      return
-    }
-
     try {
       const data = new FormData()
       data.append("username", formData.username)
@@ -87,7 +80,6 @@ const UserProfileEdit = () => {
   return (
     <div>
       <h2>Edit Profile</h2>
-
       <form onSubmit={handleSubmit}>
         <div>
           <label>Username:</label>
@@ -137,10 +129,8 @@ const UserProfileEdit = () => {
 
         <button type="submit">Save Changes</button>
       </form>
-
       {error && <p style={{ color: "red" }}>{error}</p>}
-      {message && <p style={{ color: "green" }}>{message}</p>}
-
+      {message && <p style={{ color: "green" }}>{message}</p>}a
       <button onClick={() => navigate(`/users/${userId}`)}>Cancel</button>
     </div>
   )
