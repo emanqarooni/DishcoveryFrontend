@@ -17,6 +17,7 @@ import UserProfile from "./pages/UserProfile"
 import UserProfileEdit from "./pages/UserProfileEdit"
 import "./App.css"
 
+
 const App = () => {
   const [user, setUser] = useState(null)
   const [recipes, setRecipes] = useState([])
@@ -95,6 +96,8 @@ const App = () => {
           <Route path="/recipe/myRecipes" element={<MyRecipes />} />
 
           {/* challenges routes */}
+          <Route path="/recipe/createRecipe" element={<Form />} />
+          <Route path="/challenges" element={<Challenges/>} />
         </Routes>
       </main>
     </>
