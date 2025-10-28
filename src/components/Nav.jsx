@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from "react"
+import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import { BASE_URL } from "../services/api"
 
 const Nav = ({ user, handleLogOut }) => {
   const [isOpen, setIsOpen] = useState(false)
   const navigate = useNavigate()
-  const timerRef = useRef(null)
 
   const toggleSidebar = () => setIsOpen(!isOpen)
 
@@ -12,28 +12,6 @@ const Nav = ({ user, handleLogOut }) => {
     handleLogOut()
     navigate("/login")
   }
-
-  // Auto-close sidebar after 3 seconds when opened
-  useEffect(() => {
-    if (isOpen) {
-      // Clear any existing timer
-      if (timerRef.current) {
-        clearTimeout(timerRef.current)
-      }
-
-      // Set new timer to close after 3 seconds
-      timerRef.current = setTimeout(() => {
-        setIsOpen(false)
-      }, 3000)
-    }
-
-    // Cleanup timer on unmount or when isOpen changes
-    return () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current)
-      }
-    }
-  }, [isOpen])
 
   return (
     <>
@@ -49,7 +27,9 @@ const Nav = ({ user, handleLogOut }) => {
         {user && (
           <div className="user-info">
             <img
-              src={user.profilePic || "/default-avatar.png"}
+              src={
+                user.image ? `${BASE_URL}${user.image}` : "/default-avatar.png"
+              }
               alt="User avatar"
               className="user-avatar"
             />
