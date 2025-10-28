@@ -94,6 +94,7 @@ const Challenges = () => {
       const formData = new FormData()
       formData.append("image", image)
       formData.append("description", description)
+      formData.append("challengeMonth", currentChallenge?.month || "")
       const response = await Client.post("/posts", formData, {
         headers: { "Content-Type": "multipart/form-data" }
       })
@@ -106,7 +107,7 @@ const Challenges = () => {
       setLoading(false)
     }
   }
-  
+
   return (
     <div className="challenges-page">
       <h1>{currentChallenge ? currentChallenge.month + " Challenge" : "No Active Challenge"}</h1>

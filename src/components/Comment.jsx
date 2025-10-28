@@ -4,7 +4,7 @@ const Comments = ({ comments }) => {
       {comments && comments.length > 0 ? (
         comments.map(c => (
           <div key={c._id} className="comment">
-            <p><strong>{c.owner?.username || "User"}:</strong> {c.text}</p>
+            <p><strong>{c.owner?.username || "User"}:</strong> {c.comment}</p>
           </div>
         ))
       ) : (
