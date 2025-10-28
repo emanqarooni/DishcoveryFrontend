@@ -16,6 +16,7 @@ const challengesData = [
   { month: "November", startDate: "2025-11-01T00:00:00", endDate: "2025-11-30T23:59:59" },
   { month: "December", startDate: "2025-12-01T00:00:00", endDate: "2025-12-31T23:59:59" }
 ]
+
 const Challenges = () => {
   const [challenges, setChallenges] = useState([])
   const [description, setDescription] = useState("")
