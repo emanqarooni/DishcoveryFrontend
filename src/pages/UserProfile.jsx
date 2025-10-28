@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
-import Client from "../services/api"
+import Client, { BASE_URL } from "../services/api"
+import RecipeCard from "../components/RecipeCard"
 
 const UserProfile = () => {
   const { userId } = useParams()
   const [user, setUser] = useState(null)
   const [favoritedRecipes, setFavoritedRecipes] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const getUser = async () => {
@@ -16,45 +18,69 @@ const UserProfile = () => {
         console.log(response.data)
       } catch (error) {
         console.error("Error fetching user:", error)
+      } finally {
+        setLoading(false)
       }
     }
     getUser()
   }, [userId])
 
+  if (loading) {
+    return <div className="loading-message">Loading profile...</div>
+  }
+
   return user ? (
-    <div>
-      <img
-        src={`http://localhost:3000${user.image}`}
-        alt={`profile image for ${user.username}`}
-        width="120"
-        height="120"
-      />
-      <h4>Username: {user.username}</h4>
-      <h4>Email: {user.email}</h4>
+    <div className="user-profile-container">
+      <div className="profile-header">
+        <div className="profile-info">
+          <img
+            src={
+              user.image ? `${BASE_URL}${user.image}` : "/default-avatar.png"
+            }
+            alt={`profile image for ${user.username}`}
+            className="profile-image"
+          />
+          <div className="profile-details">
+            <h2>{user.username}</h2>
+            <p className="profile-email">{user.email}</p>
+            <p className="profile-gender">
+              {user.gender === "male" ? "Male" : "Female"}
+            </p>
+          </div>
+        </div>
 
-      <Link to={`/users/${userId}/edit`}>
-        <button>Edit profile</button>
-      </Link>
-      <Link to={`/auth/update/${userId}`}>
-        <button>Update password</button>
-      </Link>
+        <div className="profile-actions">
+          <Link to={`/users/${userId}/edit`}>
+            <button className="edit-profile-btn">Edit Profile</button>
+          </Link>
+          <Link to={`/auth/update/${userId}`}>
+            <button className="update-password-btn">Update Password</button>
+          </Link>
+        </div>
+      </div>
 
-      <div>
-        <h3>Favorited Recipes</h3>
+      <div className="favorited-section">
+        <h3 className="section-title">
+          ❤️ Favorited Recipes ({favoritedRecipes.length})
+        </h3>
         {favoritedRecipes.length > 0 ? (
-          favoritedRecipes.map((recipe) => (
-            <div key={recipe._id}>
-              <h4>{recipe.title}</h4>
-              <p>{recipe.description}</p>
-            </div>
-          ))
+          <div className="recipe-grid">
+            {favoritedRecipes.map((recipe) => (
+              <RecipeCard key={recipe._id} recipe={recipe} />
+            ))}
+          </div>
         ) : (
-          <p>No favorited recipes yet.</p>
+          <div className="no-favorites">
+            <p>No favorited recipes yet.</p>
+            <Link to="/recipe">
+              <button className="browse-recipes-btn">Browse Recipes</button>
+            </Link>
+          </div>
         )}
       </div>
     </div>
   ) : (
-    <div>Profile Data is not Showing....</div>
+    <div className="error-message">Profile Data is not Showing....</div>
   )
 }
 
