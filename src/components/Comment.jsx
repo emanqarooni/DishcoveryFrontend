@@ -1,7 +1,13 @@
 import { useState } from "react"
 import Client from "../services/api"
 
-const Comments = ({ comments, challenge, challenges, setChallenges, currentUser }) => {
+const Comments = ({
+  comments,
+  challenge,
+  challenges,
+  setChallenges,
+  currentUser,
+}) => {
   const [editingCommentId, setEditingCommentId] = useState(null)
   const [editText, setEditText] = useState("")
   const [replyingCommentId, setReplyingCommentId] = useState(null)
@@ -35,7 +41,12 @@ const Comments = ({ comments, challenge, challenges, setChallenges, currentUser 
 
       const updatedChallenges = challenges.map((c) =>
         c._id === challenge._id
-          ? { ...c, comments: c.comments.filter(comment => comment._id !== commentId) }
+          ? {
+              ...c,
+              comments: c.comments.filter(
+                (comment) => comment._id !== commentId
+              ),
+            }
           : c
       )
 
@@ -63,13 +74,15 @@ const Comments = ({ comments, challenge, challenges, setChallenges, currentUser 
     if (!editText.trim()) return
 
     try {
-      const updatedChallenges = challenges.map(c =>
+      const updatedChallenges = challenges.map((c) =>
         c._id === challenge._id
           ? {
               ...c,
-              comments: c.comments.map(comment =>
-                comment._id === commentId ? { ...comment, comment: editText } : comment
-              )
+              comments: c.comments.map((comment) =>
+                comment._id === commentId
+                  ? { ...comment, comment: editText }
+                  : comment
+              ),
             }
           : c
       )
@@ -100,18 +113,21 @@ const Comments = ({ comments, challenge, challenges, setChallenges, currentUser 
     const newReply = {
       _id: Date.now().toString(),
       comment: replyText,
-      owner: currentUser
+      owner: currentUser,
     }
 
-    const updatedChallenges = challenges.map(c =>
+    const updatedChallenges = challenges.map((c) =>
       c._id === challenge._id
         ? {
             ...c,
-            comments: c.comments.map(comment =>
+            comments: c.comments.map((comment) =>
               comment._id === commentId
-                ? { ...comment, replies: [...(comment.replies || []), newReply] }
+                ? {
+                    ...comment,
+                    replies: [...(comment.replies || []), newReply],
+                  }
                 : comment
-            )
+            ),
           }
         : c
     )
@@ -126,68 +142,89 @@ const Comments = ({ comments, challenge, challenges, setChallenges, currentUser 
   return (
     <div className="comments-section">
       {comments && comments.length > 0 ? (
-        comments.map(c => (
-          <div key={c._id} className="comment">
-            {editingCommentId === c._id ? (
-              <div className="edit-comment-form">
-                <input
-                  type="text"
-                  value={editText}
-                  onChange={(e) => setEditText(e.target.value)}
-                  className="edit-comment-input"
-                />
-                <div className="edit-comment-actions">
-                  <button onClick={() => handleEditComment(c._id)} className="save-btn">
-                    Save
-                  </button>
-                  <button onClick={cancelEditing} className="cancel-btn">
-                    Cancel
-                  </button>
+        comments.map((c) => {
+          console.log("userId:", userId, "comment owner:", c.owner)
+
+          return (
+            <div key={c._id} className="comment">
+              {editingCommentId === c._id ? (
+                <div className="edit-comment-form">
+                  <input
+                    type="text"
+                    value={editText}
+                    onChange={(e) => setEditText(e.target.value)}
+                    className="edit-comment-input"
+                  />
+                  <div className="edit-comment-actions">
+                    <button
+                      onClick={() => handleEditComment(c._id)}
+                      className="save-btn"
+                    >
+                      Save
+                    </button>
+                    <button onClick={cancelEditing} className="cancel-btn">
+                      Cancel
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <>
-                <p>
-                  <strong>{c.owner?.username || "User"}:</strong> {c.comment}
-                </p>
-                {userId && c.owner?._id && c.owner._id === userId && (
-                  <div className="comment-actions">
-                    <button onClick={() => startEditing(c)} className="edit-btn">
-                      Edit
-                    </button>
-                    <button onClick={() => handleDeleteComment(c._id)} className="delete-btn">
-                      Delete
-                    </button>
-                  </div>
-                )}
-                <button onClick={() => startReply(c._id)} className="reply-btn">
-                  Reply
-                </button>
-                {replyingCommentId === c._id && (
-                  <div className="reply-form">
-                    <input
-                      type="text"
-                      value={replyText}
-                      onChange={(e) => setReplyText(e.target.value)}
-                      placeholder="Write a reply..."
-                    />
-                    <button onClick={() => handleAddReply(c._id)}>Send</button>
-                    <button onClick={cancelReply}>Cancel</button>
-                  </div>
-                )}
-                {c.replies && c.replies.length > 0 && (
-                  <div className="replies">
-                    {c.replies.map(r => (
-                      <p key={r._id}>
-                        <strong>{r.owner?.username || "User"}:</strong> {r.comment}
-                      </p>
-                    ))}
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        ))
+              ) : (
+                <>
+                  <p>
+                    <strong>{c.owner?.username || "User"}:</strong> {c.comment}
+                  </p>
+
+                  {userId &&
+                    ((typeof c.owner === "string" && c.owner === userId) ||
+                      (typeof c.owner === "object" &&
+                        (c.owner._id === userId || c.owner === userId))) && (
+                      <div className="comment-actions">
+                        <button
+                          onClick={() => startEditing(c)}
+                          className="edit-btn"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteComment(c._id)}
+                          className="delete-btn"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    )}
+
+                  <button
+                    onClick={() => startReply(c._id)}
+                    className="reply-btn"
+                  >
+                    Reply
+                  </button>
+                  {replyingCommentId === c._id && (
+                    <div className="reply-form">
+                      <input
+                        type="text"
+                        value={replyText}
+                        onChange={(e) => setReplyText(e.target.value)}
+                        placeholder="Write a reply..."
+                      />
+                      <button onClick={() => handleAddReply(c._id)}>Send</button>
+                      <button onClick={cancelReply}>Cancel</button>
+                    </div>
+                  )}
+                  {c.replies && c.replies.length > 0 && (
+                    <div className="replies">
+                      {c.replies.map((r) => (
+                        <p key={r._id}>
+                          <strong>{r.owner?.username || "User"}:</strong> {r.comment}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )
+        })
       ) : (
         <p>No comments yet</p>
       )}

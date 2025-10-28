@@ -57,15 +57,24 @@ const Post = ({ challenge, challenges, setChallenges }) => {
       {challenge.owner && (
         <div className="post-owner">
           <img
-            src={challenge.owner.profilePic || "/default-avatar.png"}
+            src={
+              `http://localhost:3000/${challenge.owner.image}` ||
+              "/default-avatar.png"
+            }
             alt={challenge.owner.username || "User"}
             className="owner-avatar"
           />
-          <span className="owner-name">by {challenge.owner.username || "User"}</span>
+          <span className="owner-name">
+            by {challenge.owner.username || "User"}
+          </span>
         </div>
       )}
 
-      <img src={challenge.image} alt="Recipe" className="post-image" />
+      <img
+        src={`http://localhost:3000${challenge.image}`}
+        alt="Recipe"
+        className="post-image"
+      />
       <p>{challenge.description}</p>
       <p>{challenge.likes?.length || 0} Likes</p>
 
