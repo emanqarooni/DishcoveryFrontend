@@ -40,7 +40,6 @@ const AllRecipes = () => {
     }
   }
 
-  // Filter recipes based on category and search query
   const filteredRecipes = recipes.filter((recipe) => {
     const matchesCategory =
       selectedCategory === "All" || recipe.category === selectedCategory
@@ -50,6 +49,7 @@ const AllRecipes = () => {
       recipe.title.toLowerCase().includes(searchLower) ||
       recipe.description.toLowerCase().includes(searchLower) ||
       recipe.category.toLowerCase().includes(searchLower) ||
+      recipe.ingredients.toLowerCase().includes(searchLower) ||
       (recipe.user?.username &&
         recipe.user.username.toLowerCase().includes(searchLower))
 
@@ -86,7 +86,7 @@ const AllRecipes = () => {
       <div className="search-bar">
         <input
           type="text"
-          placeholder="Search by recipe name, description, category, or username..."
+          placeholder="Search by recipe name, description, category, username, or ingredients..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="search-input"

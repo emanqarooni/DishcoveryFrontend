@@ -76,7 +76,7 @@ const App = () => {
             path="/recipe/:recipeId"
             element={<Details user={user} />}
           />
-          <Route path="/myRecipes" element={<MyRecipes />} />
+          <Route path="/recipe/myRecipes" element={<MyRecipes />} />
 
           {/* challenges routes */}
         </Routes>

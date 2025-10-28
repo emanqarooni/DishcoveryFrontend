@@ -69,17 +69,14 @@ const Form = ({ recipes, setRecipes }) => {
 
     try {
       if (isEditMode) {
-        // Update existing recipe
         const response = await Client.put(`/recipe/${recipeId}`, recipeState)
 
         setSuccess("Recipe updated successfully!")
 
-        // Navigate to recipe details after 1 second
         setTimeout(() => {
           navigate(`/recipe/${recipeId}`)
         }, 1000)
       } else {
-        // Create new recipe
         const formData = new FormData()
 
         Object.entries(recipeState).forEach(([key, value]) => {

@@ -8,7 +8,6 @@ const RecipeCard = ({ recipe }) => {
     navigate(`/recipe/${recipe._id}`)
   }
 
-  // Calculate average rating
   const calculateAverageRating = () => {
     if (!recipe.ratings || recipe.ratings.length === 0) return 0
     const total = recipe.ratings.reduce(
