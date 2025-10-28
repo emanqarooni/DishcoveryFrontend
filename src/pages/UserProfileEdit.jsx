@@ -80,7 +80,6 @@ const UserProfileEdit = () => {
   return (
     <div>
       <h2>Edit Profile</h2>
-
       <form onSubmit={handleSubmit}>
         <div>
           <label>Username:</label>
@@ -130,10 +129,8 @@ const UserProfileEdit = () => {
 
         <button type="submit">Save Changes</button>
       </form>
-
       {error && <p style={{ color: "red" }}>{error}</p>}
-      {message && <p style={{ color: "green" }}>{message}</p>}
-
+      {message && <p style={{ color: "green" }}>{message}</p>}a
       <button onClick={() => navigate(`/users/${userId}`)}>Cancel</button>
     </div>
   )
