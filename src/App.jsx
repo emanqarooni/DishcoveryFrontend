@@ -16,6 +16,7 @@ import ResetPassword from "./pages/ResetPassword"
 import UserProfile from "./pages/UserProfile"
 import UserProfileEdit from "./pages/UserProfileEdit"
 import UpdatePassword from "./pages/UpdatePassword"
+import Explore from "./pages/Explore"
 import "./App.css"
 
 const App = () => {
@@ -100,6 +101,9 @@ const App = () => {
           {/* challenges routes */}
           <Route path="/recipe/createRecipe" element={<Form />} />
           <Route path="/challenges" element={<Challenges />} />
+
+          {/* explore routes */}
+          <Route path="/explore" element={<Explore />} />
         </Routes>
       </main>
     </>
