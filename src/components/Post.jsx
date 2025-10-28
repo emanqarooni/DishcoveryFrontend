@@ -8,17 +8,25 @@ const Post = ({ challenge, challenges, setChallenges, user }) => {
 
   const currentUser = JSON.parse(localStorage.getItem("user"))
 
-  // handle like
+  // handle like 
   const handleLike = async () => {
     try {
       const response = await Client.post(`/posts/${challenge._id}/like`)
+
+      const updatedPost = {
+        ...response.data,
+        image: response.data.image || challenge.image,
+        owner: response.data.owner || challenge.owner
+      }
+
       const updatedChallenges = challenges.map((c) =>
-        c._id === challenge._id ? response.data : c
+        c._id === challenge._id ? updatedPost : c
       )
-      updatedChallenges.sort(
+
+      const sorted = updatedChallenges.sort(
         (a, b) => (b.likes?.length || 0) - (a.likes?.length || 0)
       )
-      setChallenges(updatedChallenges)
+      setChallenges(sorted)
     } catch (error) {
       console.error("Error liking post:", error)
     }
@@ -35,7 +43,14 @@ const Post = ({ challenge, challenges, setChallenges, user }) => {
         comment: commentText,
       })
 
-      const newComment = response.data.comment
+      const newComment = {
+        ...response.data.comment,
+        owner: {
+          _id: currentUser._id,
+          username: currentUser.username,
+          image: currentUser.image,
+        },
+      }
 
       const updatedChallenges = challenges.map((c) =>
         c._id === challenge._id
@@ -54,15 +69,20 @@ const Post = ({ challenge, challenges, setChallenges, user }) => {
   return (
     <div className="post-card">
       {/* Owner Info */}
-{      console.log(user)}
       {challenge.owner && (
         <div className="post-owner">
           <img
-            src={`${BASE_URL}/${user.image}` || "/default-avatar.png"}
-            alt={user.username || "User"}
+            src={
+              challenge.owner.image
+                ? `${BASE_URL}${challenge.owner.image}`
+                : "/default-avatar.png"
+            }
+            alt={challenge.owner.username || "User"}
             className="owner-avatar"
           />
-          <span className="owner-name">by {user.username || "User"}</span>
+          <span className="owner-name">
+            by {challenge.owner.username || "User"}
+          </span>
         </div>
       )}
       <img
