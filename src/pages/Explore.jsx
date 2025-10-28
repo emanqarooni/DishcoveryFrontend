@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import { getAllMeals, searchMealByName } from "../services/mealService"
+import {
+  getAllMeals,
+  searchMealByName,
+  getMealCategories,
+  getMealsByCategory,
+} from "../services/mealService"
 
 const Explore = () => {
   const [meals, setMeals] = useState([])
   const [search, setSearch] = useState("")
-  const [loading, setLoading] = useState(false) //loading text if there is delay
+  const [categories, setCategories] = useState([])
+  const [selectedCategory, setSelectedCategory] = useState("")
 
   //fetch youtube vids
   const getYoutubeId = (url) => {
@@ -21,14 +27,13 @@ const Explore = () => {
   //fetch all data
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true)
       try {
         const data = await getAllMeals()
+        const cats = await getMealCategories()
         setMeals(data)
+        setCategories(cats)
       } catch (err) {
         console.error(err)
-      } finally {
-        setLoading(false)
       }
     }
     fetchData()
@@ -38,16 +43,27 @@ const Explore = () => {
   const handleSearch = async (e) => {
     e.preventDefault()
     if (!search.trim()) return
-
-    setLoading(true)
     try {
       const results = await searchMealByName(search)
       setMeals(results || [])
     } catch (err) {
       console.error(err)
-    } finally {
-      setLoading(false)
     }
+  }
+
+  //handling filter category
+  const handleCategoryChange = async (e) => {
+    const category = e.target.value
+    setSelectedCategory(category)
+
+    if (!category) {
+      // reset to all
+      const data = await getAllMeals()
+      setMeals(data)
+      return
+    }
+    const data = await getMealsByCategory(category)
+    setMeals(data || [])
   }
 
   return (
@@ -65,7 +81,18 @@ const Explore = () => {
         <button>Search</button>
       </form>
 
-      {loading && <p>Loading meals...</p>}
+      {/* Category Filter */}
+      <div>
+        <label>Filter by Category:</label>
+        <select value={selectedCategory} onChange={handleCategoryChange}>
+          <option value="">All</option>
+          {categories.map((cat) => (
+            <option key={cat.idCategory} value={cat.strCategory}>
+              {cat.strCategory}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {/* Meals grid */}
       <div>

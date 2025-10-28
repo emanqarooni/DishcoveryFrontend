@@ -18,6 +18,12 @@ export const getMealById = async (id) => {
   return res.data.meals[0]
 }
 
+//getting all categories
+export const getMealCategories = async () => {
+  const res = await MealClient.get(`/categories.php`)
+  return res.data.categories
+}
+
 //filtering by category
 export const getMealsByCategory = async (category) => {
   const res = await MealClient.get(`/filter.php?c=${category}`)
