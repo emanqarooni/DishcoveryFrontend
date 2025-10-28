@@ -3,7 +3,6 @@ import axios from "axios"
 
 import Post from "./Post"
 
-
 const Comments = ({ postId, comments, setComments }) => {
   const [newComment, setNewComment] = useState("")
   const [editingComment, setEditingComment] = useState(null)
@@ -33,7 +32,7 @@ const Comments = ({ postId, comments, setComments }) => {
         { comment: editText },
         { headers: { Authorization: `Bearer ${token}` } }
       )
-      setComments(comments.map(c => (c._id === id ? response.data : c)))
+      setComments(comments.map((c) => (c._id === id ? response.data : c)))
       setEditingComment(null)
       setEditText("")
     } catch (error) {
@@ -44,9 +43,9 @@ const Comments = ({ postId, comments, setComments }) => {
   const handleDeleteComment = async (id) => {
     try {
       await axios.delete(`${API_URL}/comments/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       })
-      setComments(comments.filter(c => c._id !== id))
+      setComments(comments.filter((c) => c._id !== id))
     } catch (error) {
       console.error("Error deleting comment:", error)
     }
@@ -60,13 +59,13 @@ const Comments = ({ postId, comments, setComments }) => {
           type="text"
           placeholder="Add a comment"
           value={newComment}
-          onChange={e => setNewComment(e.target.value)}
+          onChange={(e) => setNewComment(e.target.value)}
         />
         <button type="submit">Post</button>
       </form>
       <ul className="comments-list">
         {comments.length > 0 ? (
-          comments.map(comment => (
+          comments.map((comment) => (
             <li key={comment._id} className="comment-item">
               <strong>{comment.owner?.username || "User"}:</strong>
               {editingComment === comment._id ? (
@@ -74,17 +73,30 @@ const Comments = ({ postId, comments, setComments }) => {
                   <input
                     type="text"
                     value={editText}
-                    onChange={e => setEditText(e.target.value)}
+                    onChange={(e) => setEditText(e.target.value)}
                   />
-                  <button onClick={() => handleEditComment(comment._id)}>Save</button>
-                  <button onClick={() => setEditingComment(null)}>Cancel</button>
+                  <button onClick={() => handleEditComment(comment._id)}>
+                    Save
+                  </button>
+                  <button onClick={() => setEditingComment(null)}>
+                    Cancel
+                  </button>
                 </>
               ) : (
                 <>
                   <span> {comment.comment}</span>
                   <div className="comment-actions">
-                    <button onClick={() => { setEditingComment(comment._id); setEditText(comment.comment) }}>Edit</button>
-                    <button onClick={() => handleDeleteComment(comment._id)}>Delete</button>
+                    <button
+                      onClick={() => {
+                        setEditingComment(comment._id)
+                        setEditText(comment.comment)
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button onClick={() => handleDeleteComment(comment._id)}>
+                      Delete
+                    </button>
                   </div>
                 </>
               )}
