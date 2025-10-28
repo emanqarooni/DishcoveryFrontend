@@ -1,8 +1,14 @@
 import MealClient from "./mealDB"
 
-//searching meal by name
+//get all meals
 export const getAllMeals = async () => {
   const res = await MealClient.get(`/search.php?s=`)
+  return res.data.meals
+}
+
+//searching meal by name
+export const searchMealByName = async (name) => {
+  const res = await MealClient.get(`/search.php?s=${name}`)
   return res.data.meals
 }
 
