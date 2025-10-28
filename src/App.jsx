@@ -15,8 +15,8 @@ import ForgotPassword from "./pages/ForgetPassword"
 import ResetPassword from "./pages/ResetPassword"
 import UserProfile from "./pages/UserProfile"
 import UserProfileEdit from "./pages/UserProfileEdit"
+import UpdatePassword from "./pages/UpdatePassword"
 import "./App.css"
-
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -43,6 +43,7 @@ const App = () => {
     if (token) checkToken()
   }, [])
 
+  // Routes where sidebar should be hidden
   const hideSidebarRoutes = [
     "/login",
     "/register",
@@ -50,6 +51,7 @@ const App = () => {
     "/auth/reset",
   ]
 
+  // Check if current path should hide sidebar
   const shouldHideSidebar = hideSidebarRoutes.some((path) =>
     location.pathname.startsWith(path)
   )
@@ -78,7 +80,10 @@ const App = () => {
             path="/users/:userId/edit"
             element={<UserProfileEdit user={user} setUser={setUser} />}
           />
-
+          <Route
+            path="/auth/update/:id"
+            element={<UpdatePassword user={user} setUser={setUser} />}
+          />
           {/* recipe routes */}
           <Route path="/recipe" element={<AllRecipes />} />
           <Route
@@ -89,15 +94,12 @@ const App = () => {
             path="/recipe/edit/:recipeId"
             element={<Form recipes={recipes} setRecipes={setRecipes} />}
           />
-          <Route
-            path="/recipe/:recipeId"
-            element={<Details user={user} />}
-          />
+          <Route path="/recipe/:recipeId" element={<Details user={user} />} />
           <Route path="/recipe/myRecipes" element={<MyRecipes />} />
 
           {/* challenges routes */}
           <Route path="/recipe/createRecipe" element={<Form />} />
-          <Route path="/challenges" element={<Challenges/>} />
+          <Route path="/challenges" element={<Challenges />} />
         </Routes>
       </main>
     </>

@@ -1,9 +1,10 @@
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Link, useNavigate } from "react-router-dom"
 
 const Nav = ({ user, handleLogOut }) => {
   const [isOpen, setIsOpen] = useState(false)
   const navigate = useNavigate()
+  const timerRef = useRef(null)
 
   const toggleSidebar = () => setIsOpen(!isOpen)
 
@@ -11,6 +12,28 @@ const Nav = ({ user, handleLogOut }) => {
     handleLogOut()
     navigate("/login")
   }
+
+  // Auto-close sidebar after 3 seconds when opened
+  useEffect(() => {
+    if (isOpen) {
+      // Clear any existing timer
+      if (timerRef.current) {
+        clearTimeout(timerRef.current)
+      }
+
+      // Set new timer to close after 3 seconds
+      timerRef.current = setTimeout(() => {
+        setIsOpen(false)
+      }, 3000)
+    }
+
+    // Cleanup timer on unmount or when isOpen changes
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current)
+      }
+    }
+  }, [isOpen])
 
   return (
     <>
@@ -53,7 +76,7 @@ const Nav = ({ user, handleLogOut }) => {
             🔍 {isOpen && <span>Explore</span>}
           </Link>
           {user && (
-            <Link to={`/users/${user._id}`} className="sidebar-link">
+            <Link to={`/users/${user.id}`} className="sidebar-link">
               👤 {isOpen && <span>User Profile</span>}
             </Link>
           )}
