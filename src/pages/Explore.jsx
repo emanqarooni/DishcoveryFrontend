@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 import { getAllMeals, searchMealByName } from "../services/mealService"
 
 const Explore = () => {
@@ -72,21 +73,22 @@ const Explore = () => {
           const videoId = getYoutubeId(meal.strYoutube)
 
           return (
-            <div key={meal.idMeal}>
-              <img src={meal.strMealThumb} alt={meal.strMeal} />
-              <h2>{meal.strMeal}</h2>
+            <Link key={meal.idMeal} to={`/explore/${meal.idMeal}`}>
+              <div>
+                <img src={meal.strMealThumb} alt={meal.strMeal} />
+                <h2>{meal.strMeal}</h2>
 
-              {/* YouTube embed */}
-              {videoId && (
-                <iframe
-                  width="100%"
-                  height="300"
-                  src={`https://www.youtube.com/embed/${videoId}`}
-                  title={meal.strMeal}
-                  allowFullScreen
-                ></iframe>
-              )}
-            </div>
+                {videoId && (
+                  <iframe
+                    width="100%"
+                    height="250"
+                    src={`https://www.youtube.com/embed/${videoId}`}
+                    title={meal.strMeal}
+                    allowFullScreen
+                  ></iframe>
+                )}
+              </div>
+            </Link>
           )
         })}
       </div>
