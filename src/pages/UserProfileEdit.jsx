@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import Client from "../services/api"
+import Client, { BASE_URL } from "../services/api"
 
-const UserProfileEdit = () => {
+const UserProfileEdit = ({ user, setUser }) => {
   const { userId } = useParams()
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
@@ -26,7 +26,7 @@ const UserProfileEdit = () => {
           gender: user.gender || "",
           image: null,
         })
-        setPreview(`http://localhost:3000${user.image}`)
+        setPreview(`${BASE_URL}${user.image}`)
       } catch (error) {
         console.error("Error fetching user for edit:", error)
         setError("Failed to fetch user data.")
@@ -64,6 +64,10 @@ const UserProfileEdit = () => {
       const res = await Client.put(`/users/${userId}`, data, {
         headers: { "Content-Type": "multipart/form-data" },
       })
+
+      //update user state
+      const updatedUser = res.data.user
+      setUser(updatedUser)
 
       setMessage(res.data.message || "Profile updated successfully!")
       setTimeout(() => navigate(`/users/${userId}`), 1500)
