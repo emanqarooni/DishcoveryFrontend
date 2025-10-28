@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import Client from "../services/api"
 
-const UserProfileEdit = () => {
+const UserProfileEdit = ({ user, setUser }) => {
   const { userId } = useParams()
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
@@ -64,6 +64,10 @@ const UserProfileEdit = () => {
       const res = await Client.put(`/users/${userId}`, data, {
         headers: { "Content-Type": "multipart/form-data" },
       })
+
+      //update user state
+      const updatedUser = res.data.user
+      setUser(updatedUser)
 
       setMessage(res.data.message || "Profile updated successfully!")
       setTimeout(() => navigate(`/users/${userId}`), 1500)
