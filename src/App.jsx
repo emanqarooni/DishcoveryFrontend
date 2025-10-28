@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Route, Routes } from "react-router"
+import { Route, Routes, useLocation } from "react-router"
 import { CheckSession } from "./services/Auth"
 
 import Nav from "./components/Nav"
@@ -7,23 +7,22 @@ import Register from "./pages/SignUp"
 import Login from "./pages/Login"
 import Home from "./pages/Home"
 import Form from "./pages/Form"
+import AllRecipes from "./pages/AllRecipes"
+import Details from "./pages/Details"
+import MyRecipes from "./pages/MyRecipes"
+import Challenges from "./pages/Challenges"
 import ForgotPassword from "./pages/ForgetPassword"
 import ResetPassword from "./pages/ResetPassword"
 import UserProfile from "./pages/UserProfile"
 import UserProfileEdit from "./pages/UserProfileEdit"
-import AllRecipes from "./pages/AllRecipes"
-import MyRecipes from "./pages/MyRecipes"
-import Details from "./pages/Details"
-import UpdatePassword from "./pages/UpdatePassword"
-import Challenges from "./pages/Challenges"
-
 import "./App.css"
 
 
 const App = () => {
   const [user, setUser] = useState(null)
-
   const [recipes, setRecipes] = useState([])
+
+  const location = useLocation()
 
   const checkToken = async () => {
     try {
@@ -44,9 +43,22 @@ const App = () => {
     if (token) checkToken()
   }, [])
 
+  const hideSidebarRoutes = [
+    "/login",
+    "/register",
+    "/forgot-password",
+    "/auth/reset",
+  ]
+
+  const shouldHideSidebar = hideSidebarRoutes.some((path) =>
+    location.pathname.startsWith(path)
+  )
+
   return (
     <>
-    <Nav user={user} handleLogOut={handleLogOut} />
+      {!shouldHideSidebar && user && (
+        <Nav user={user} handleLogOut={handleLogOut} />
+      )}
       <main>
         <Routes>
           {/* auth routes */}
@@ -65,20 +77,22 @@ const App = () => {
             path="/users/:userId/edit"
             element={<UserProfileEdit user={user} setUser={setUser} />}
           />
-          <Route
-            path="/auth/update/:id"
-            element={<UpdatePassword user={user} setUser={setUser} />}
-          />
 
           {/* recipe routes */}
+          <Route path="/recipe" element={<AllRecipes />} />
           <Route
             path="/recipe/createRecipe"
             element={<Form recipes={recipes} setRecipes={setRecipes} />}
           />
-
-          <Route path="/recipe" element={<AllRecipes />} />
+          <Route
+            path="/recipe/edit/:recipeId"
+            element={<Form recipes={recipes} setRecipes={setRecipes} />}
+          />
+          <Route
+            path="/recipe/:recipeId"
+            element={<Details user={user} />}
+          />
           <Route path="/recipe/myRecipes" element={<MyRecipes />} />
-          <Route path="/recipe/:recipeId" element={<Details />} />
 
           {/* challenges routes */}
           <Route path="/recipe/createRecipe" element={<Form />} />

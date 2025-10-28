@@ -13,8 +13,8 @@ const UserProfileEdit = () => {
   })
   const [preview, setPreview] = useState(null)
   const [message, setMessage] = useState("")
+  const [error, setError] = useState("")
 
-  //here we fetch user info for editing
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -29,18 +29,18 @@ const UserProfileEdit = () => {
         setPreview(`http://localhost:3000${user.image}`)
       } catch (error) {
         console.error("Error fetching user for edit:", error)
+        setError("Failed to fetch user data.")
       }
     }
     fetchUserData()
   }, [userId])
 
-  //handling user inputs
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData({ ...formData, [name]: value })
   }
 
-  //handling image chnage
+  //handle image changes
   const handleImageChange = (e) => {
     const file = e.target.files[0]
     if (file) {
@@ -49,9 +49,9 @@ const UserProfileEdit = () => {
     }
   }
 
-  //submit data
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setError("")
     setMessage("")
 
     try {
@@ -65,18 +65,21 @@ const UserProfileEdit = () => {
         headers: { "Content-Type": "multipart/form-data" },
       })
 
-      setMessage("Profile updated successfully!")
+      setMessage(res.data.message || "Profile updated successfully!")
       setTimeout(() => navigate(`/users/${userId}`), 1500)
     } catch (error) {
       console.error("Error updating profile:", error)
-      setMessage("Failed to update profile. Please try again.")
+      if (error.response?.data?.error) {
+        setError(error.response.data.error)
+      } else {
+        setError("Failed to update profile. Please try again.")
+      }
     }
   }
 
   return (
     <div>
       <h2>Edit Profile</h2>
-
       <form onSubmit={handleSubmit}>
         <div>
           <label>Username:</label>
@@ -126,9 +129,8 @@ const UserProfileEdit = () => {
 
         <button type="submit">Save Changes</button>
       </form>
-
-      {message && <p>{message}</p>}
-
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      {message && <p style={{ color: "green" }}>{message}</p>}a
       <button onClick={() => navigate(`/users/${userId}`)}>Cancel</button>
     </div>
   )
