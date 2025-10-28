@@ -1201,3 +1201,120 @@ body {
 }
 
 
+/* Recipe Form Page */
+.recipeForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 600px;
+  margin: 40px auto;
+  background-color: white;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Title */
+.recipeForm h1 {
+  align-self: center;   /* Centers the title only */
+  text-align: center;
+  color: #333;
+  font-size: 2rem;
+  margin-bottom: 25px;
+}
+
+/* Labels */
+.recipeForm label {
+  align-self: flex-start;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+/* Inputs and Textareas */
+.recipeForm input[type="text"],
+.recipeForm input[type="number"],
+.recipeForm input[type="file"],
+.recipeForm select,
+.recipeForm textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  box-sizing: border-box;
+}
+
+.recipeForm input:focus,
+.recipeForm textarea:focus,
+.recipeForm select:focus {
+  border-color: #4caf50;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+/* Textareas */
+.recipeForm textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Form Buttons */
+.form-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.form-buttons button {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+/* Submit Button */
+.form-buttons button[type="submit"] {
+  background-color: #4caf50;
+  color: white;
+}
+
+.form-buttons button[type="submit"]:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+/* Cancel Button */
+.cancel-button {
+  background-color: #9e9e9e;
+  color: white;
+}
+
+.cancel-button:hover {
+  background-color: #757575;
+  transform: translateY(-2px);
+}
+
+/* Edit note text */
+.edit-note {
+  font-size: 0.9rem;
+  color: #666;
+  font-style: italic;
+  text-align: left;
+}
+
+/* Loading message styling */
+.loading-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+  padding: 40px;
+}
+
+
+

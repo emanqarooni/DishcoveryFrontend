@@ -23,7 +23,6 @@ const Form = ({ recipes, setRecipes }) => {
   const [success, setSuccess] = useState("")
   const [loading, setLoading] = useState(false)
 
-  // Fetch recipe data if in edit mode
   useEffect(() => {
     if (isEditMode) {
       fetchRecipe()
@@ -162,9 +161,9 @@ const Form = ({ recipes, setRecipes }) => {
         </div>
       )}
 
-      <h1>{isEditMode ? "Edit Recipe" : "Create New Recipe"}</h1>
 
       <form onSubmit={handleSubmit} className="recipeForm">
+      <h1>{isEditMode ? "Edit Recipe" : "Create New Recipe"}</h1>
         <label htmlFor="title">Title</label>
         <input
           id="title"
@@ -278,8 +277,7 @@ const Form = ({ recipes, setRecipes }) => {
             onClick={() =>
               navigate(isEditMode ? `/recipe/${recipeId}` : "/recipe")
             }
-            className="cancel-button"
-          >
+            className="cancel-button">
             Cancel
           </button>
         </div>
