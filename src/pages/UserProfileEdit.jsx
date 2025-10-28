@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import Client from "../services/api"
+import Client, { BASE_URL } from "../services/api"
 
 const UserProfileEdit = ({ user, setUser }) => {
   const { userId } = useParams()
@@ -26,7 +26,7 @@ const UserProfileEdit = ({ user, setUser }) => {
           gender: user.gender || "",
           image: null,
         })
-        setPreview(`http://localhost:3000${user.image}`)
+        setPreview(`${BASE_URL}${user.image}`)
       } catch (error) {
         console.error("Error fetching user for edit:", error)
         setError("Failed to fetch user data.")
