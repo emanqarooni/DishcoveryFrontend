@@ -1070,3 +1070,134 @@ body {
     font-size: 1.5rem;
   }
 }
+
+/* My Recipes Container */
+.my-recipes-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header with Title and Button */
+.my-recipes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.my-recipes-header h1 {
+  font-size: 2.5rem;
+  margin: 0;
+  color: #333;
+}
+
+/* Add Recipe Button */
+.add-recipe-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-recipe-btn:hover {
+  background-color: #45a049;
+}
+
+.plus-icon {
+  font-size: 1.3rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+/* No Recipes State */
+.no-recipes-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.no-recipes-icon {
+  font-size: 5rem;
+  margin-bottom: 20px;
+  opacity: 0.7;
+}
+
+.no-recipes-state h2 {
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 1.8rem;
+}
+
+.no-recipes-state p {
+  color: #666;
+  margin-bottom: 30px;
+  font-size: 1.1rem;
+}
+
+.create-first-recipe-btn {
+  padding: 12px 30px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.create-first-recipe-btn:hover {
+  background-color: #45a049;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .my-recipes-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .my-recipes-header h1 {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  .add-recipe-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .no-recipes-icon {
+    font-size: 4rem;
+  }
+
+  .no-recipes-state h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .my-recipes-container {
+    padding: 15px;
+  }
+
+  .my-recipes-header h1 {
+    font-size: 1.8rem;
+  }
+}
+
+
