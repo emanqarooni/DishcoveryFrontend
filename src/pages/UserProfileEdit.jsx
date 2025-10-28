@@ -15,8 +15,6 @@ const UserProfileEdit = () => {
   const [message, setMessage] = useState("")
   const [error, setError] = useState("")
 
-  const emailValidation = /^[a-zA-Z0-9._%+-]+@gmail\.com$/
-
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -55,11 +53,6 @@ const UserProfileEdit = () => {
     e.preventDefault()
     setError("")
     setMessage("")
-
-    if (!emailValidation.test(formData.email)) {
-      setError("Please enter a valid Gmail address (e.g., name@gmail.com).")
-      return
-    }
 
     try {
       const data = new FormData()
