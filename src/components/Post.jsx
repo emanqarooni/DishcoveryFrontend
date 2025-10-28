@@ -6,7 +6,6 @@ const Post = ({ challenge, challenges, setChallenges }) => {
   const [commentText, setCommentText] = useState("")
   const [showComments, setShowComments] = useState(true)
 
-  // get current user (from localStorage or context)
   const currentUser = JSON.parse(localStorage.getItem("user"))
 
   // handle like
@@ -54,7 +53,19 @@ const Post = ({ challenge, challenges, setChallenges }) => {
 
   return (
     <div className="post-card">
-      <img src={challenge.image} alt="Recipe" />
+      {/* Owner Info */}
+      {challenge.owner && (
+        <div className="post-owner">
+          <img
+            src={challenge.owner.profilePic || "/default-avatar.png"}
+            alt={challenge.owner.username || "User"}
+            className="owner-avatar"
+          />
+          <span className="owner-name">by {challenge.owner.username || "User"}</span>
+        </div>
+      )}
+
+      <img src={challenge.image} alt="Recipe" className="post-image" />
       <p>{challenge.description}</p>
       <p>{challenge.likes?.length || 0} Likes</p>
 
