@@ -1,111 +1,140 @@
 import { useState } from "react"
-import axios from "axios"
+import Client from "../services/api"
 
-import Post from "./Post"
-
-const Comments = ({ postId, comments, setComments }) => {
-  const [newComment, setNewComment] = useState("")
-  const [editingComment, setEditingComment] = useState(null)
+const Comments = ({ comments, challenge, challenges, setChallenges, currentUser }) => {
+  const [editingCommentId, setEditingCommentId] = useState(null)
   const [editText, setEditText] = useState("")
-  const token = localStorage.getItem("token")
 
-  const handleAddComment = async (e) => {
-    e.preventDefault()
-    if (!newComment.trim()) return
-    try {
-      const response = await axios.post(
-        `${API_URL}/comments`,
-        { postId, comment: newComment },
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
-      setComments([response.data.comment, ...comments])
-      setNewComment("")
-    } catch (error) {
-      console.error("Error adding comment:", error)
+  const getCurrentUserId = () => {
+    if (currentUser?._id) return currentUser._id
+
+    const userStr = localStorage.getItem("user")
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr)
+        if (user?._id) return user._id
+      } catch (e) {
+        console.error("Error parsing user:", e)
+      }
     }
+
+    const userId = localStorage.getItem("userId")
+    if (userId) return userId
+
+    return null
   }
 
-  const handleEditComment = async (id) => {
-    try {
-      const response = await axios.put(
-        `${API_URL}/comments/${id}`,
-        { comment: editText },
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
-      setComments(comments.map((c) => (c._id === id ? response.data : c)))
-      setEditingComment(null)
-      setEditText("")
-    } catch (error) {
-      console.error("Error editing comment:", error)
-    }
-  }
+  // Delete comment
+  const handleDeleteComment = async (commentId) => {
+    if (!window.confirm("Are you sure you want to delete this comment?")) return
 
-  const handleDeleteComment = async (id) => {
     try {
-      await axios.delete(`${API_URL}/comments/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      setComments(comments.filter((c) => c._id !== id))
+      await Client.delete(`/comment/${commentId}`)
+
+      const updatedChallenges = challenges.map((c) =>
+        c._id === challenge._id
+          ? { ...c, comments: c.comments.filter(comment => comment._id !== commentId) }
+          : c
+      )
+
+      setChallenges(updatedChallenges)
     } catch (error) {
       console.error("Error deleting comment:", error)
+      alert("Error deleting comment")
     }
   }
+
+  // Start editing
+  const startEditing = (comment) => {
+    setEditingCommentId(comment._id)
+    setEditText(comment.comment)
+  }
+
+  // Cancel editing
+  const cancelEditing = () => {
+    setEditingCommentId(null)
+    setEditText("")
+  }
+
+  // Save edit
+ const handleEditComment = async (commentId) => {
+  if (!editText.trim()) return
+
+  try {
+    const updatedChallenges = challenges.map(c =>
+      c._id === challenge._id
+        ? {
+            ...c,
+            comments: c.comments.map(comment =>
+              comment._id === commentId ? { ...comment, comment: editText } : comment
+            )
+          }
+        : c
+    )
+
+    setChallenges(updatedChallenges)
+    setEditingCommentId(null)
+    setEditText("")
+  } catch (error) {
+    console.error("Error editing comment:", error)
+    alert("Error editing comment")
+  }
+}
+
+
+  const userId = getCurrentUserId()
+
+  console.log("Current userId:", userId)
+  console.log("Comments:", comments)
 
   return (
     <div className="comments-section">
-      <h4>Comments ({comments.length})</h4>
-      <form onSubmit={handleAddComment} className="add-comment-form">
-        <input
-          type="text"
-          placeholder="Add a comment"
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-        />
-        <button type="submit">Post</button>
-      </form>
-      <ul className="comments-list">
-        {comments.length > 0 ? (
-          comments.map((comment) => (
-            <li key={comment._id} className="comment-item">
-              <strong>{comment.owner?.username || "User"}:</strong>
-              {editingComment === comment._id ? (
-                <>
+      {comments && comments.length > 0 ? (
+        comments.map(c => {
+        console.log("Comment owner ID:", c.owner?._id, "Current user ID:", userId)
+
+          return (
+            <div key={c._id} className="comment">
+              {editingCommentId === c._id ? (
+                <div className="edit-comment-form">
                   <input
                     type="text"
                     value={editText}
                     onChange={(e) => setEditText(e.target.value)}
+                    className="edit-comment-input"
                   />
-                  <button onClick={() => handleEditComment(comment._id)}>
-                    Save
-                  </button>
-                  <button onClick={() => setEditingComment(null)}>
-                    Cancel
-                  </button>
-                </>
-              ) : (
-                <>
-                  <span> {comment.comment}</span>
-                  <div className="comment-actions">
-                    <button
-                      onClick={() => {
-                        setEditingComment(comment._id)
-                        setEditText(comment.comment)
-                      }}
-                    >
-                      Edit
+                  <div className="edit-comment-actions">
+                    <button onClick={() => handleEditComment(c._id)} className="save-btn">
+                      Save
                     </button>
-                    <button onClick={() => handleDeleteComment(comment._id)}>
-                      Delete
+                    <button onClick={cancelEditing} className="cancel-btn">
+                      Cancel
                     </button>
                   </div>
+                </div>
+              ) : (
+                <>
+                  <p>
+                    <strong>{c.owner?.username || "User"}:</strong> {c.comment}
+                  </p>
+                  {userId && c.owner?._id && c.owner._id === userId && (
+                    <div className="comment-actions">
+                      <button onClick={() => startEditing(c)} className="edit-btn">
+                        Edit
+                      </button>
+                      <button onClick={() => handleDeleteComment(c._id)} className="delete-btn">
+                        Delete
+                      </button>
+                    </div>
+                  )}
                 </>
               )}
-            </li>
-          ))
-        ) : (
-          <p>No comments yet</p>
-        )}
-      </ul>
+            </div>
+          )
+        })
+      ) : (
+        <p>No comments yet</p>
+      )}
     </div>
   )
 }

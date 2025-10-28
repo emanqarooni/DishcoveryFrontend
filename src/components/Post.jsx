@@ -1,52 +1,84 @@
 import { useState } from "react"
-import axios from "axios"
-
+import Client from "../services/api"
 import Comments from "./Comment"
 
 const Post = ({ challenge, challenges, setChallenges }) => {
-  const [liked, setLiked] = useState(challenge.likedByUser || false)
-  const [likesCount, setLikesCount] = useState(challenge.likesCount || 0)
-  const [comments, setComments] = useState(challenge.comments || [])
+  const [commentText, setCommentText] = useState("")
+  const [showComments, setShowComments] = useState(true)
 
+  // get current user (from localStorage or context)
+  const currentUser = JSON.parse(localStorage.getItem("user"))
+
+  // handle like
   const handleLike = async () => {
     try {
-      const token = localStorage.getItem("token")
-      const response = await axios.post(
-        `${API_URL}/posts/${challenge._id}/like`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
+      const response = await Client.post(`/posts/${challenge._id}/like`)
+      const updatedChallenges = challenges.map((c) =>
+        c._id === challenge._id ? response.data : c
       )
-      setLiked(response.data.likedByUser)
-      setLikesCount(response.data.likesCount)
+      updatedChallenges.sort(
+        (a, b) => (b.likes?.length || 0) - (a.likes?.length || 0)
+      )
+      setChallenges(updatedChallenges)
     } catch (error) {
       console.error("Error liking post:", error)
     }
   }
 
-  const handleDelete = async () => {
-    if (!window.confirm("Are you sure you want to delete this challenge")) return
+  // add comment handler
+  const handleAddComment = async (e) => {
+    e.preventDefault()
+    if (!commentText.trim()) return
+
     try {
-      const token = localStorage.getItem("token")
-      await axios.delete(`${API_URL}/posts/${challenge._id}`, {
-        headers: { Authorization: `Bearer ${token}` }
+      const response = await Client.post("/comment", {
+        postId: challenge._id,
+        comment: commentText,
       })
-      setChallenges(challenges.filter(item => item._id !== challenge._id))
+
+      const newComment = response.data.comment
+
+      const updatedChallenges = challenges.map((c) =>
+        c._id === challenge._id
+          ? { ...c, comments: [...(c.comments || []), newComment] }
+          : c
+      )
+
+      setChallenges(updatedChallenges)
+      setCommentText("")
+      setShowComments(true)
     } catch (error) {
-      console.error("Error deleting challenge:", error)
+      console.error("Error adding comment:", error)
     }
   }
 
   return (
     <div className="post-card">
-      <img src={`${API_URL}${challenge.image}`} alt="Challenge" className="post-img" />
-      <div className="post-content">
-        <p>{challenge.description}</p>
-        <div className="post-actions">
-          <button onClick={handleLike}>{liked ? "Unlike" : "Like"} ({likesCount})</button>
-          <button onClick={handleDelete}>Delete</button>
-        </div>
-        <Comments postId={challenge._id} comments={comments} setComments={setComments} />
-      </div>
+      <img src={challenge.image} alt="Recipe" />
+      <p>{challenge.description}</p>
+      <p>{challenge.likes?.length || 0} Likes</p>
+
+      <button onClick={handleLike}>Like</button>
+
+      <form onSubmit={handleAddComment}>
+        <input
+          type="text"
+          placeholder="Add a comment..."
+          value={commentText}
+          onChange={(e) => setCommentText(e.target.value)}
+        />
+        <button type="submit">Post</button>
+      </form>
+
+      {showComments && (
+        <Comments
+          comments={challenge.comments}
+          challenge={challenge}
+          challenges={challenges}
+          setChallenges={setChallenges}
+          currentUser={currentUser}
+        />
+      )}
     </div>
   )
 }
