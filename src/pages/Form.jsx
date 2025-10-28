@@ -1,8 +1,12 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useParams, useNavigate } from "react-router-dom"
 import Client from "../services/api.js"
-import { Link } from "react-router-dom"
 
 const Form = ({ recipes, setRecipes }) => {
+  const { recipeId } = useParams() // Get recipeId from URL if editing
+  const navigate = useNavigate()
+  const isEditMode = !!recipeId // Check if we're in edit mode
+
   const initialState = {
     title: "",
     description: "",
@@ -19,6 +23,36 @@ const Form = ({ recipes, setRecipes }) => {
   const [success, setSuccess] = useState("")
   const [loading, setLoading] = useState(false)
 
+  // Fetch recipe data if in edit mode
+  useEffect(() => {
+    if (isEditMode) {
+      fetchRecipe()
+    }
+  }, [recipeId])
+
+  const fetchRecipe = async () => {
+    try {
+      setLoading(true)
+      const response = await Client.get(`/recipe/${recipeId}`)
+      const recipe = response.data
+
+      setRecipeState({
+        title: recipe.title || "",
+        description: recipe.description || "",
+        ingredients: recipe.ingredients || "",
+        preparingTime: recipe.preparingTime || "",
+        cookingTime: recipe.cookingTime || "",
+        servings: recipe.servings || "",
+        category: recipe.category || "",
+      })
+    } catch (error) {
+      console.error("Error fetching recipe:", error)
+      setError("Failed to load recipe")
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const handleChange = (event) => {
     setRecipeState({ ...recipeState, [event.target.name]: event.target.value })
   }
@@ -33,64 +67,71 @@ const Form = ({ recipes, setRecipes }) => {
     setError("")
     setSuccess("")
 
-    const formData = new FormData()
-
-    Object.entries(recipeState).forEach(([key, value]) => {
-      if (value) {
-        formData.append(key, value)
-      }
-    })
-
-    // Append file
-    if (imageFile) {
-      formData.append("image", imageFile)
-    }
-
     try {
-      const response = await Client.post(`/recipe/createRecipe`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
+      if (isEditMode) {
+        const response = await Client.put(`/recipe/${recipeId}`, recipeState)
 
-      let recipesList = [...recipes]
-      recipesList.push(response.data)
+        setSuccess("Recipe updated successfully!")
 
-      setRecipes(recipesList)
+        setTimeout(() => {
+          navigate(`/recipe/${recipeId}`)
+        }, 1000)
+      } else {
+        const formData = new FormData()
 
-      setRecipeState(initialState)
-      setImageFile(null)
+        Object.entries(recipeState).forEach(([key, value]) => {
+          if (value) {
+            formData.append(key, value)
+          }
+        })
 
-      // Reset file input
-      const fileInput = document.getElementById("image")
-      if (fileInput) fileInput.value = ""
+        if (imageFile) {
+          formData.append("image", imageFile)
+        }
 
-      // Show success message
-      setSuccess("Recipe created successfully!")
+        const response = await Client.post(`/recipe/createRecipe`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
 
-      // Auto-hide success message after 5 seconds
-      setTimeout(() => {
-        setSuccess("")
-      }, 5000)
+        let recipesList = [...recipes]
+        recipesList.push(response.data)
+        setRecipes(recipesList)
+
+        setRecipeState(initialState)
+        setImageFile(null)
+
+        const fileInput = document.getElementById("image")
+        if (fileInput) fileInput.value = ""
+
+        setSuccess("Recipe created successfully!")
+
+        setTimeout(() => {
+          setSuccess("")
+        }, 5000)
+      }
     } catch (error) {
-      console.error("Error creating recipe:", error)
+      console.error("Error submitting recipe:", error)
 
-      // Show error message
       if (error.response) {
-        setError(error.response.data.msg || "Error creating recipe")
+        setError(error.response.data.msg || "Error saving recipe")
       } else if (error.request) {
         setError("No response from server. Please check your connection.")
       } else {
-        setError("Error creating recipe. Please try again.")
+        setError("Error saving recipe. Please try again.")
       }
 
-      // Auto-hide error message after 5 seconds
       setTimeout(() => {
         setError("")
       }, 5000)
     } finally {
       setLoading(false)
     }
+  }
+
+  if (loading && isEditMode && !recipeState.title) {
+    return <div className="loading-message">Loading recipe...</div>
   }
 
   return (
@@ -121,9 +162,7 @@ const Form = ({ recipes, setRecipes }) => {
         </div>
       )}
 
-      <Link to="/recipe">
-        <button type="button">Go to Recipes</button>
-      </Link>
+      <h1>{isEditMode ? "Edit Recipe" : "Create New Recipe"}</h1>
 
       <form onSubmit={handleSubmit} className="recipeForm">
         <label htmlFor="title">Title</label>
@@ -155,15 +194,25 @@ const Form = ({ recipes, setRecipes }) => {
           required
         />
 
-        <label htmlFor="image">Upload Image</label>
-        <input
-          id="image"
-          type="file"
-          name="image"
-          onChange={handleFileChange}
-          accept="image/*"
-          required
-        />
+        {!isEditMode && (
+          <>
+            <label htmlFor="image">Upload Image</label>
+            <input
+              id="image"
+              type="file"
+              name="image"
+              onChange={handleFileChange}
+              accept="image/*"
+              required
+            />
+          </>
+        )}
+
+        {isEditMode && (
+          <p className="edit-note">
+            Note: Image cannot be changed when editing a recipe.
+          </p>
+        )}
 
         <label htmlFor="preparingTime">Preparing Time</label>
         <input
@@ -215,9 +264,25 @@ const Form = ({ recipes, setRecipes }) => {
           <option value="Turkish">Turkish</option>
         </select>
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Creating..." : "Create Recipe"}
-        </button>
+        <div className="form-buttons">
+          <button type="submit" disabled={loading}>
+            {loading
+              ? "Saving..."
+              : isEditMode
+              ? "Update Recipe"
+              : "Create Recipe"}
+          </button>
+
+          <button
+            type="button"
+            onClick={() =>
+              navigate(isEditMode ? `/recipe/${recipeId}` : "/recipe")
+            }
+            className="cancel-button"
+          >
+            Cancel
+          </button>
+        </div>
       </form>
     </div>
   )

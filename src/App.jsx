@@ -7,20 +7,18 @@ import Register from "./pages/SignUp"
 import Login from "./pages/Login"
 import Home from "./pages/Home"
 import Form from "./pages/Form"
+import AllRecipes from "./pages/AllRecipes"
+import Details from "./pages/Details"
+import MyRecipes from "./pages/MyRecipes"
 import Challenges from "./pages/Challenges"
 import ForgotPassword from "./pages/ForgetPassword"
 import ResetPassword from "./pages/ResetPassword"
 import UserProfile from "./pages/UserProfile"
 import UserProfileEdit from "./pages/UserProfileEdit"
-import AllRecipes from "./pages/AllRecipes"
-import MyRecipes from "./pages/MyRecipes"
-import Details from "./pages/Details"
-import UpdatePassword from "./pages/UpdatePassword"
 import "./App.css"
 
 const App = () => {
   const [user, setUser] = useState(null)
-
   const [recipes, setRecipes] = useState([])
 
   const location = useLocation()
@@ -79,20 +77,22 @@ const App = () => {
             path="/users/:userId/edit"
             element={<UserProfileEdit user={user} setUser={setUser} />}
           />
-          <Route
-            path="/auth/update/:id"
-            element={<UpdatePassword user={user} setUser={setUser} />}
-          />
 
           {/* recipe routes */}
+          <Route path="/recipe" element={<AllRecipes />} />
           <Route
             path="/recipe/createRecipe"
             element={<Form recipes={recipes} setRecipes={setRecipes} />}
           />
-
-          <Route path="/recipe" element={<AllRecipes />} />
+          <Route
+            path="/recipe/edit/:recipeId"
+            element={<Form recipes={recipes} setRecipes={setRecipes} />}
+          />
+          <Route
+            path="/recipe/:recipeId"
+            element={<Details user={user} />}
+          />
           <Route path="/recipe/myRecipes" element={<MyRecipes />} />
-          <Route path="/recipe/:recipeId" element={<Details />} />
 
           {/* challenges routes */}
         </Routes>
