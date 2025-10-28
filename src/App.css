@@ -262,107 +262,125 @@ body {
 
 /* sidebar */
 
-/* Toggle Button */
-.sidebar-toggle {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 6px;
-  cursor: pointer;
-  z-index: 1001;
-  font-size: 18px;
-  transition: background-color 0.3s ease;
-}
-
-.sidebar-toggle:hover {
-  background-color: #45a049;
-}
-
-/* Sidebar Container */
+/* Sidebar base */
 .sidebar {
   position: fixed;
   top: 0;
-  left: -250px; /* Hidden by default */
-  width: 250px;
+  left: 0;
   height: 100%;
-  background-color: #333;
+  background-color: #1e1e1e;
   color: white;
-  padding: 60px 20px;
-  box-sizing: border-box;
-  transition: left 0.3s ease;
-  z-index: 1000;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  justify-content: space-between;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  z-index: 1000;
 }
 
-/* When sidebar is open */
+/* Collapsed (only icons) */
+.sidebar.collapsed {
+  width: 80px;
+}
+
+/* Expanded (icons + text) */
 .sidebar.open {
-  left: 0;
+  width: 260px;
 }
 
-/* Sidebar Title */
-.sidebar-title {
+/* Sidebar header */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.sidebar-logo {
+  font-size: 20px;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+/* User Info */
+.user-info {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  gap: 10px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.username {
+  font-weight: bold;
   margin: 0;
-  font-size: 1.5rem;
-  color: #4caf50;
-  border-bottom: 2px solid #4caf50;
-  padding-bottom: 10px;
 }
 
-/* Sidebar Links */
+.email {
+  font-size: 0.8rem;
+  color: #ccc;
+  margin: 0;
+}
+
+/* Menu links */
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 10px 20px;
+}
+
 .sidebar-link {
   color: white;
   text-decoration: none;
-  font-size: 1.1rem;
-  transition: color 0.3s ease, padding-left 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  transition: background 0.3s;
 }
 
 .sidebar-link:hover {
-  color: #4caf50;
-  padding-left: 5px;
+  background-color: #333;
 }
 
-/* Logout Button */
+/* Logout button */
 .logout-btn {
-  background-color: #f44336;
-  color: white;
+  background: none;
   border: none;
-  padding: 10px 15px;
-  border-radius: 6px;
+  color: #f44336;
+  text-align: left;
   cursor: pointer;
   font-size: 1rem;
-  transition: background-color 0.3s ease;
-  margin-top: 20px;
 }
 
 .logout-btn:hover {
-  background-color: #d32f2f;
+  color: #ff6b6b;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .recipes-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-  }
+/* Push content right when sidebar is open */
+main {
+  margin-left: 80px;
+  transition: margin-left 0.3s ease;
+}
 
-  .recipes-header h1 {
-    font-size: 2rem;
-  }
-
-  .category-filter {
-    gap: 8px;
-  }
-
-  .category-button {
-    padding: 6px 15px;
-    font-size: 0.85rem;
-  }
+.sidebar.open ~ main {
+  margin-left: 260px;
 }
 
 @media (max-width: 480px) {

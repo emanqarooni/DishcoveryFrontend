@@ -60,6 +60,7 @@ const App = () => {
       {!shouldHideSidebar && user && (
         <Nav user={user} handleLogOut={handleLogOut} />
       )}
+
       <main>
         <Routes>
           {/* auth routes */}
