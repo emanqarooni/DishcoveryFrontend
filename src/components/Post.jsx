@@ -8,21 +8,27 @@ const Post = ({ challenge, challenges, setChallenges, user }) => {
 
   const currentUser = JSON.parse(localStorage.getItem("user"))
 
-  // handle like 
+  // handle like وإعادة ترتيب
   const handleLike = async () => {
     try {
       const response = await Client.post(`/posts/${challenge._id}/like`)
 
+      // التأكد من أن response.data يحتوي على الصورة
       const updatedPost = {
         ...response.data,
         image: response.data.image || challenge.image,
-        owner: response.data.owner || challenge.owner
+        owner: response.data.owner || challenge.owner,
+        description: response.data.description || challenge.description,
+        challengeMonth:
+          response.data.challengeMonth || challenge.challengeMonth,
+        comments: response.data.comments || challenge.comments,
       }
 
       const updatedChallenges = challenges.map((c) =>
         c._id === challenge._id ? updatedPost : c
       )
 
+      // إعادة ترتيب بعد كل لايك
       const sorted = updatedChallenges.sort(
         (a, b) => (b.likes?.length || 0) - (a.likes?.length || 0)
       )
@@ -32,7 +38,7 @@ const Post = ({ challenge, challenges, setChallenges, user }) => {
     }
   }
 
-  // add comment handler
+  // ✅ add comment handler - محدّث
   const handleAddComment = async (e) => {
     e.preventDefault()
     if (!commentText.trim()) return
@@ -43,13 +49,22 @@ const Post = ({ challenge, challenges, setChallenges, user }) => {
         comment: commentText,
       })
 
+      console.log("✅ Comment response:", response.data)
+
+      // إنشاء comment جديد مع بيانات المستخدم الكاملة
       const newComment = {
-        ...response.data.comment,
+        _id:
+          response.data.comment?._id ||
+          response.data._id ||
+          Date.now().toString(),
+        comment: commentText,
         owner: {
           _id: currentUser._id,
           username: currentUser.username,
           image: currentUser.image,
         },
+        replies: [],
+        createdAt: response.data.comment?.createdAt || new Date().toISOString(),
       }
 
       const updatedChallenges = challenges.map((c) =>
@@ -63,6 +78,7 @@ const Post = ({ challenge, challenges, setChallenges, user }) => {
       setShowComments(true)
     } catch (error) {
       console.error("Error adding comment:", error)
+      alert("Error adding comment")
     }
   }
 
