@@ -22,11 +22,8 @@ const Home = () => {
             connect with fellow cooking enthusiasts.
           </p>
           <div className="hero-buttons">
-            <Link to="/recipe">
-              <button className="btn-primary">Explore Recipes</button>
-            </Link>
             <Link to="/register">
-              <button className="btn-secondary">Get Started</button>
+              <button className="btn-primary">Get Started</button>
             </Link>
           </div>
         </div>

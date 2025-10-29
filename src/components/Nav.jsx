@@ -14,16 +14,17 @@ const Nav = ({ user, handleLogOut }) => {
   }
 
   return (
-    <>
-      {/* Sidebar */}
-      <div className={`sidebar ${isOpen ? "open" : "collapsed"}`}>
-        <div className="sidebar-header">
-          <button className="toggle-btn" onClick={toggleSidebar}>
-            {isOpen ? "✖" : "☰"}
-          </button>
-          {isOpen && <h2 className="sidebar-logo">Discovery</h2>}
-        </div>
+    <div className={`sidebar ${isOpen ? "open" : "collapsed"}`}>
+      {/* Header */}
+      <div className="sidebar-header">
+        <button className="toggle-btn" onClick={toggleSidebar}>
+          {isOpen ? "✖" : "☰"}
+        </button>
+        {isOpen && <h2 className="sidebar-logo">Discovery</h2>}
+      </div>
 
+      {/*Top content */}
+      <div className="sidebar-top">
         {user && (
           <div className="user-info">
             <img
@@ -55,20 +56,20 @@ const Nav = ({ user, handleLogOut }) => {
           <Link to="/explore" className="sidebar-link">
             🔍 {isOpen && <span>Explore</span>}
           </Link>
+
           {user && (
             <Link to={`/users/${user.id}`} className="sidebar-link">
               👤 {isOpen && <span>User Profile</span>}
             </Link>
           )}
-          <button
-            onClick={handleLogoutClick}
-            className="sidebar-link logout-btn"
-          >
-            🚪 {isOpen && <span>Logout</span>}
-          </button>
         </div>
       </div>
-    </>
+
+      {/*Bottom logout */}
+      <button onClick={handleLogoutClick} className="sidebar-link logout-btn">
+        🚪 {isOpen && <span>Logout</span>}
+      </button>
+    </div>
   )
 }
 
