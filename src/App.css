@@ -29,183 +29,33 @@ body {
   min-height: 100vh;
 }
 
-/* =========================
-   Sidebar
-   ========================= */
-.sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 280px;
-  background: linear-gradient(180deg, var(--primary-dark), #2d0510);
-  color: var(--white);
-  padding: 70px 20px 25px;
-  transition: width 0.35s ease;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  box-shadow: 4px 0 18px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
-  overflow: hidden;
-}
 
-/* Collapsed sidebar */
-.sidebar.collapsed {
-  width: 100px;
-  padding: 70px 10px 25px;
-}
 
-/* =========================
-   Toggle Button
-   ========================= */
-.toggle-btn {
-  position: absolute;
-  top: 15px;
-  right: 28px;
-  width: 38px;
-  height: 38px;
-  background: var(--primary-dark);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2001;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-  transition: 0.25s ease;
-}
 
-.toggle-btn:hover {
-  filter: brightness(1.12);
-}
 
-/* =========================
-   Sidebar Header
-   ========================= */
-.sidebar-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 25px;
-}
 
-.sidebar-logo {
-  font-size: 20px;
-  font-weight: bold;
-}
 
-/* =========================
-   User Info
-   ========================= */
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 30px;
-}
 
-.user-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--warm-tan);
-}
 
-/* Center avatar in collapsed mode */
-.sidebar.collapsed .user-info {
-  justify-content: center;
-}
 
-/* Hide text in collapsed mode */
-.sidebar.collapsed .user-info div {
-  display: none;
-}
 
-/* =========================
-   Menu Links
-   ========================= */
-.sidebar-menu {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
 
-.sidebar-link,
-.logout-btn {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 1.1rem;
-  color: var(--light-silver);
-  padding: 12px 15px;
-  border-radius: 8px;
-  text-decoration: none;
-  cursor: pointer;
-  border-left: 3px solid transparent;
-  transition: 0.25s ease-in-out;
-}
 
-.sidebar-link:hover,
-.logout-btn:hover {
-  background: rgba(255, 255, 255, 0.13);
-  color: var(--white);
-  border-left-color: var(--warm-tan);
-}
 
-/* Collapsed: hide text + center icons */
-.sidebar.collapsed .sidebar-link,
-.sidebar.collapsed .logout-btn {
-  justify-content: center !important;
-  padding: 14px 0 !important;
-}
-.sidebar.collapsed span {
-  display: none;
-}
 
-/* Ensure icons are perfectly centered */
-.sidebar-link i,
-.logout-btn i {
-  margin: 0 auto;
-}
 
-/* Center icon column */
-.sidebar.collapsed .sidebar-menu {
-  align-items: center;
-}
 
-/* =========================
-   Logout Button
-   ========================= */
-.logout-btn {
-  margin-top: auto;
-  background: linear-gradient(
-    135deg,
-    var(--primary-accent),
-    var(--primary-dark)
-  );
-  border: none;
-  font-weight: 600;
-  box-shadow: 0 4px 10px rgba(118, 64, 78, 0.3);
-}
 
-/* =========================
-   Main Content Shift
-   ========================= */
-main {
-  margin-left: 280px;
-  transition: 0.35s ease;
-  padding: 25px;
-}
 
-/* Collapsed offset updated to 100px */
-.sidebar.collapsed ~ main {
-  margin-left: 100px;
-}
+
+
+
+
+
+
+
+
+
 
 /* ========== POPUP NOTIFICATIONS ========== */
 .popup {
@@ -515,88 +365,23 @@ main {
   font-size: 1.1rem;
 }
 
-/* User Info */
-.user-info {
-  display: flex;
-  align-items: center;
-  padding: 15px;
-  gap: 10px;
-}
 
-.user-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-}
 
-.username {
-  font-weight: bold;
-  margin: 0;
-}
 
-.email {
-  font-size: 0.8rem;
-  color: #ccc;
-  margin: 0;
-}
 
-/* Menu links */
-.sidebar-menu {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  padding: 10px 20px;
-}
 
-.sidebar-link {
-  color: white;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
-  border-radius: 6px;
-  transition: background 0.3s;
-}
 
-.sidebar-link:hover {
-  background-color: #333;
-}
 
-/* Logout button */
-.logout-btn {
-  background: none;
-  border: none;
-  color: #f44336;
-  text-align: left;
-  cursor: pointer;
-  font-size: 1rem;
-}
 
-.logout-btn:hover {
-  color: #ff6b6b;
-}
 
-/* Push content right when sidebar is open */
-main {
-  margin-left: 80px;
-  transition: margin-left 0.3s ease;
-}
 
-.sidebar.open ~ main {
-  margin-left: 300px;
-}
 
-@media (max-width: 480px) {
-  .recipes-grid {
-    grid-template-columns: 1fr;
-  }
 
-  .all-recipes-container {
-    padding: 15px;
-  }
-}
+
+
+
+
+
 
 /* Recipe Details Page */
 .recipe-owner {
@@ -3722,3 +3507,195 @@ main {
     font-size: 0.9rem;
   }
 }
+
+/* ========== SIDEBAR - CENTERED, NON-RESPONSIVE ========== */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background: linear-gradient(180deg, var(--primary-dark) 0%, #2d0510 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  z-index: 1000;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Collapsed state (only icons) */
+.sidebar.collapsed {
+  width: 80px;
+}
+
+/* Expanded state (icons + text) */
+.sidebar.open {
+  width: 280px;
+}
+
+/* Sidebar Header - CENTERED */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 25px 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  min-height: 80px;
+  text-align: center;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  left: 20px;
+}
+
+.toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+}
+
+.sidebar-logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+  text-align: center;
+}
+
+/* User Info - CENTERED */
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 25px 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  gap: 12px;
+  text-align: center;
+}
+
+.user-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--warm-tan);
+  box-shadow: 0 4px 10px rgba(185, 147, 102, 0.3);
+}
+
+.username {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+}
+
+.email {
+  font-size: 0.85rem;
+  color: var(--light-silver);
+  margin: 0;
+}
+
+/* Sidebar Menu - CENTERED */
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
+  gap: 5px;
+  flex: 1;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--light-silver);
+  text-decoration: none;
+  padding: 15px 0;
+  border-radius: 0;
+  transition: all 0.3s ease;
+  font-size: 1.1rem;
+  font-weight: 500;
+  gap: 12px;
+  white-space: nowrap;
+  width: 100%;
+  border: none;
+  background: none;
+}
+
+.sidebar-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  transform: none;
+  border-left: none;
+}
+
+/* Logout button specific styles */
+.sidebar-link.logout-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  font-family: inherit;
+  font-size: 1.1rem;
+  margin-top: auto;
+}
+
+.sidebar-link.logout-btn:hover {
+  background: rgba(220, 53, 69, 0.2);
+  color: #ff6b6b;
+}
+
+/* Icon styling */
+.sidebar-link span:first-child {
+  font-size: 1.4rem;
+}
+
+/* Text animation for collapsed state */
+.sidebar.collapsed .sidebar-link span:not(:first-child),
+.sidebar.collapsed .username,
+.sidebar.collapsed .email,
+.sidebar.collapsed .sidebar-logo {
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  width: 0;
+}
+
+.sidebar.open .sidebar-link span:not(:first-child),
+.sidebar.open .username,
+.sidebar.open .email,
+.sidebar.open .sidebar-logo {
+  opacity: 1;
+  visibility: visible;
+  width: auto;
+}
+
+/* Main content adjustment */
+main {
+  margin-left: 80px;
+  transition: margin-left 0.3s ease;
+  min-height: 100vh;
+}
+
+.sidebar.open ~ main {
+  margin-left: 280px;
+}
+
+
+
+

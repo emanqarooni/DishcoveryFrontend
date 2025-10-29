@@ -14,6 +14,7 @@ const UserProfileEdit = ({ user, setUser }) => {
   const [preview, setPreview] = useState(null)
   const [message, setMessage] = useState("")
   const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -40,7 +41,7 @@ const UserProfileEdit = ({ user, setUser }) => {
     setFormData({ ...formData, [name]: value })
   }
 
-  //handle image changes
+  // Handle image changes with styled file input
   const handleImageChange = (e) => {
     const file = e.target.files[0]
     if (file) {
@@ -53,6 +54,7 @@ const UserProfileEdit = ({ user, setUser }) => {
     e.preventDefault()
     setError("")
     setMessage("")
+    setLoading(true)
 
     try {
       const data = new FormData()
@@ -65,11 +67,13 @@ const UserProfileEdit = ({ user, setUser }) => {
         headers: { "Content-Type": "multipart/form-data" },
       })
 
-      //update user state
+      // Update user state
       const updatedUser = res.data.user
       setUser(updatedUser)
 
       setMessage(res.data.message || "Profile updated successfully!")
+
+      // Success popup will redirect
       setTimeout(() => navigate(`/users/${userId}`), 1500)
     } catch (error) {
       console.error("Error updating profile:", error)
@@ -78,18 +82,47 @@ const UserProfileEdit = ({ user, setUser }) => {
       } else {
         setError("Failed to update profile. Please try again.")
       }
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
     <div className="user-profile-edit-container">
-      <div className="edit-card">
-        <h2 className="edit-title">Edit Profile</h2>
+      <div className="col">
+        <h2>Edit Profile</h2>
 
-        <form onSubmit={handleSubmit} className="edit-form">
-          <div className="input-group">
-            <label>Username</label>
+        {/* Success Popup */}
+        {message && (
+          <div className="popup popup-success">
+            <div className="popup-content">
+              <span className="popup-icon">✓</span>
+              <span>{message}</span>
+              <button onClick={() => setMessage("")} className="popup-close">
+                ×
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Error Popup */}
+        {error && (
+          <div className="popup popup-error">
+            <div className="popup-content">
+              <span className="popup-icon">⚠</span>
+              <span>{error}</span>
+              <button onClick={() => setError("")} className="popup-close">
+                ×
+              </button>
+            </div>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="profile-edit-form">
+          <div className="input-wrapper">
+            <label htmlFor="username">Username:</label>
             <input
+              id="username"
               name="username"
               type="text"
               value={formData.username}
@@ -98,9 +131,10 @@ const UserProfileEdit = ({ user, setUser }) => {
             />
           </div>
 
-          <div className="input-group">
-            <label>Email</label>
+          <div className="input-wrapper">
+            <label htmlFor="email">Email:</label>
             <input
+              id="email"
               name="email"
               type="email"
               value={formData.email}
@@ -109,12 +143,14 @@ const UserProfileEdit = ({ user, setUser }) => {
             />
           </div>
 
-          <div className="input-group">
-            <label>Gender</label>
+          <div className="input-wrapper">
+            <label htmlFor="gender">Gender:</label>
             <select
+              id="gender"
               name="gender"
               value={formData.gender}
               onChange={handleChange}
+              required
             >
               <option value="">Select gender</option>
               <option value="male">Male</option>
@@ -122,27 +158,56 @@ const UserProfileEdit = ({ user, setUser }) => {
             </select>
           </div>
 
-          <div className="input-group">
-            <label>Profile Image</label>
+          <div className="input-wrapper">
+            <label>Profile Image:</label>
+
+            {/* Image Preview */}
             {preview && (
-              <div className="edit-img-preview">
-                <img src={preview} alt="preview" />
+              <div className="image-preview">
+                <img
+                  src={preview}
+                  alt="Preview"
+                  className="profile-preview-image"
+                />
               </div>
             )}
-            <input type="file" accept="image/*" onChange={handleImageChange} />
+
+            {/* Styled File Input - Same as Form.jsx */}
+            <div className="file-input-wrapper">
+              <label
+                className={`file-input-label ${
+                  formData.image ? "has-file" : ""
+                }`}
+              >
+                <span className="file-input-text">
+                  {formData.image
+                    ? "✅ Change Image"
+                    : "📸 Choose Profile Image"}
+                </span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="file-input-hidden"
+                />
+              </label>
+              {formData.image && (
+                <span className="file-selected-name">
+                  Selected: {formData.image.name}
+                </span>
+              )}
+            </div>
           </div>
 
-          {error && <div className="alert alert-error">{error}</div>}
-          {message && <div className="alert alert-success">{message}</div>}
-
-          <div className="edit-btn-row">
-            <button type="submit" className="save-btn">
-              Save Changes
+          <div className="form-buttons">
+            <button type="submit" disabled={loading}>
+              {loading ? "Saving..." : "Save Changes"}
             </button>
+
             <button
               type="button"
-              className="cancel-btn"
               onClick={() => navigate(`/users/${userId}`)}
+              className="cancel-button"
             >
               Cancel
             </button>

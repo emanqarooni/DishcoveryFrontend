@@ -17,6 +17,7 @@ const UpdatePassword = () => {
 
   const [message, setMessage] = useState("")
   const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
   // Password validation
   const passwordValidation = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/
@@ -52,8 +53,12 @@ const UpdatePassword = () => {
     e.preventDefault()
     setMessage("")
     setError("")
+    setLoading(true)
 
-    if (!validateForm()) return
+    if (!validateForm()) {
+      setLoading(false)
+      return
+    }
 
     try {
       const res = await Client.put(`/auth/update/${id}`, formData)
@@ -68,22 +73,45 @@ const UpdatePassword = () => {
         err.response?.data?.msg ||
         "Failed to update password."
       setError(msg)
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <div className="auth-header">
-          <h2>Update Password</h2>
-          <p className="auth-subtitle">
-            Keep your account secure by updating your password
-          </p>
-        </div>
+    <div className="update-password-container">
+      <div className="col">
+        <h2>Update Password</h2>
 
-        <form onSubmit={handleSubmit} className="auth-form">
+        {/* Success Popup */}
+        {message && (
+          <div className="popup popup-success">
+            <div className="popup-content">
+              <span className="popup-icon">✓</span>
+              <span>{message}</span>
+              <button onClick={() => setMessage("")} className="popup-close">
+                ×
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Error Popup */}
+        {error && (
+          <div className="popup popup-error">
+            <div className="popup-content">
+              <span className="popup-icon">⚠</span>
+              <span>{error}</span>
+              <button onClick={() => setError("")} className="popup-close">
+                ×
+              </button>
+            </div>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit}>
           <div className="input-wrapper">
-            <label htmlFor="oldPassword">Old Password</label>
+            <label htmlFor="oldPassword">Old Password:</label>
             <div className="password-field">
               <input
                 id="oldPassword"
@@ -94,7 +122,6 @@ const UpdatePassword = () => {
                 required
               />
               <button
-                className="toggle-password-btn"
                 type="button"
                 onClick={() => setShowOldPassword(!showOldPassword)}
               >
@@ -104,7 +131,7 @@ const UpdatePassword = () => {
           </div>
 
           <div className="input-wrapper">
-            <label htmlFor="newPassword">New Password</label>
+            <label htmlFor="newPassword">New Password:</label>
             <div className="password-field">
               <input
                 id="newPassword"
@@ -115,7 +142,6 @@ const UpdatePassword = () => {
                 required
               />
               <button
-                className="toggle-password-btn"
                 type="button"
                 onClick={() => setShowNewPassword(!showNewPassword)}
               >
@@ -125,7 +151,7 @@ const UpdatePassword = () => {
           </div>
 
           <div className="input-wrapper">
-            <label htmlFor="confirmPassword">Confirm New Password</label>
+            <label htmlFor="confirmPassword">Confirm New Password:</label>
             <div className="password-field">
               <input
                 id="confirmPassword"
@@ -136,7 +162,6 @@ const UpdatePassword = () => {
                 required
               />
               <button
-                className="toggle-password-btn"
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
@@ -145,12 +170,19 @@ const UpdatePassword = () => {
             </div>
           </div>
 
-          {error && <div className="alert alert-error">{error}</div>}
-          {message && <div className="alert alert-success">{message}</div>}
+          <div className="form-buttons">
+            <button type="submit" disabled={loading}>
+              {loading ? "Updating..." : "Update Password"}
+            </button>
 
-          <button type="submit" className="submit-btn">
-            Update Password
-          </button>
+            <button
+              type="button"
+              onClick={() => navigate(`/users/${id}`)}
+              className="cancel-button"
+            >
+              Cancel
+            </button>
+          </div>
         </form>
       </div>
     </div>
