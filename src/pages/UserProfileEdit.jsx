@@ -82,60 +82,73 @@ const UserProfileEdit = ({ user, setUser }) => {
   }
 
   return (
-    <div>
-      <h2>Edit Profile</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username:</label>
-          <input
-            name="username"
-            type="text"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
-        </div>
+    <div className="user-profile-edit-container">
+      <div className="edit-card">
+        <h2 className="edit-title">Edit Profile</h2>
 
-        <div>
-          <label>Email:</label>
-          <input
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="edit-form">
+          <div className="input-group">
+            <label>Username</label>
+            <input
+              name="username"
+              type="text"
+              value={formData.username}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <div>
-          <label>Gender:</label>
-          <select
-            name="gender"
-            value={formData.gender}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-        </div>
+          <div className="input-group">
+            <label>Email</label>
+            <input
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <div>
-          <label>Profile Image:</label>
-          {preview && (
-            <div>
-              <img src={preview} alt="preview" width="120" height="120" />
-            </div>
-          )}
-          <input type="file" accept="image/*" onChange={handleImageChange} />
-        </div>
+          <div className="input-group">
+            <label>Gender</label>
+            <select
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+            >
+              <option value="">Select gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
 
-        <button type="submit">Save Changes</button>
-      </form>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {message && <p style={{ color: "green" }}>{message}</p>}a
-      <button onClick={() => navigate(`/users/${userId}`)}>Cancel</button>
+          <div className="input-group">
+            <label>Profile Image</label>
+            {preview && (
+              <div className="edit-img-preview">
+                <img src={preview} alt="preview" />
+              </div>
+            )}
+            <input type="file" accept="image/*" onChange={handleImageChange} />
+          </div>
+
+          {error && <div className="alert alert-error">{error}</div>}
+          {message && <div className="alert alert-success">{message}</div>}
+
+          <div className="edit-btn-row">
+            <button type="submit" className="save-btn">
+              Save Changes
+            </button>
+            <button
+              type="button"
+              className="cancel-btn"
+              onClick={() => navigate(`/users/${userId}`)}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   )
 }

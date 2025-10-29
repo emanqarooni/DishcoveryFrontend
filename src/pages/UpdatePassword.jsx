@@ -72,69 +72,87 @@ const UpdatePassword = () => {
   }
 
   return (
-    <div>
-      <h2>Update Password</h2>
-
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="oldPassword">Old Password:</label>
-          <input
-            id="oldPassword"
-            type={showOldPassword ? "text" : "password"}
-            name="oldPassword"
-            value={formData.oldPassword}
-            onChange={handleChange}
-            required
-          />
-          <button
-            type="button"
-            onClick={() => setShowOldPassword(!showOldPassword)}
-          >
-            {showOldPassword ? "Hide" : "Show"}
-          </button>
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-header">
+          <h2>Update Password</h2>
+          <p className="auth-subtitle">
+            Keep your account secure by updating your password
+          </p>
         </div>
 
-        <div>
-          <label htmlFor="newPassword">New Password:</label>
-          <input
-            id="newPassword"
-            type={showNewPassword ? "text" : "password"}
-            name="newPassword"
-            value={formData.newPassword}
-            onChange={handleChange}
-            required
-          />
-          <button
-            type="button"
-            onClick={() => setShowNewPassword(!showNewPassword)}
-          >
-            {showNewPassword ? "Hide" : "Show"}
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="input-wrapper">
+            <label htmlFor="oldPassword">Old Password</label>
+            <div className="password-field">
+              <input
+                id="oldPassword"
+                type={showOldPassword ? "text" : "password"}
+                name="oldPassword"
+                value={formData.oldPassword}
+                onChange={handleChange}
+                required
+              />
+              <button
+                className="toggle-password-btn"
+                type="button"
+                onClick={() => setShowOldPassword(!showOldPassword)}
+              >
+                {showOldPassword ? "Hide" : "Show"}
+              </button>
+            </div>
+          </div>
+
+          <div className="input-wrapper">
+            <label htmlFor="newPassword">New Password</label>
+            <div className="password-field">
+              <input
+                id="newPassword"
+                type={showNewPassword ? "text" : "password"}
+                name="newPassword"
+                value={formData.newPassword}
+                onChange={handleChange}
+                required
+              />
+              <button
+                className="toggle-password-btn"
+                type="button"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+              >
+                {showNewPassword ? "Hide" : "Show"}
+              </button>
+            </div>
+          </div>
+
+          <div className="input-wrapper">
+            <label htmlFor="confirmPassword">Confirm New Password</label>
+            <div className="password-field">
+              <input
+                id="confirmPassword"
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                required
+              />
+              <button
+                className="toggle-password-btn"
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? "Hide" : "Show"}
+              </button>
+            </div>
+          </div>
+
+          {error && <div className="alert alert-error">{error}</div>}
+          {message && <div className="alert alert-success">{message}</div>}
+
+          <button type="submit" className="submit-btn">
+            Update Password
           </button>
-        </div>
-
-        <div>
-          <label htmlFor="confirmPassword">Confirm New Password:</label>
-          <input
-            id="confirmPassword"
-            type={showConfirmPassword ? "text" : "password"}
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-          />
-          <button
-            type="button"
-            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-          >
-            {showConfirmPassword ? "Hide" : "Show"}
-          </button>
-        </div>
-
-        <button type="submit">Update Password</button>
-      </form>
-
-      {message && <p style={{ color: "green" }}>{message}</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+        </form>
+      </div>
     </div>
   )
 }
