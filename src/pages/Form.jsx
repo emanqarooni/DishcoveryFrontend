@@ -196,14 +196,29 @@ const Form = ({ recipes, setRecipes }) => {
         {!isEditMode && (
           <>
             <label htmlFor="image">Upload Image</label>
-            <input
-              id="image"
-              type="file"
-              name="image"
-              onChange={handleFileChange}
-              accept="image/*"
-              required
-            />
+
+            {/* Styled File Input */}
+            <div className="file-input-wrapper">
+              <label className={`file-input-label ${imageFile ? 'has-file' : ''}`}>
+                <span className="file-input-text">
+                  {imageFile ? '✅ Change Image' : '📸 Choose Image'}
+                </span>
+                <input
+                  id="image"
+                  type="file"
+                  name="image"
+                  onChange={handleFileChange}
+                  accept="image/*"
+                  className="file-input-hidden"
+                  required
+                />
+              </label>
+              {imageFile && (
+                <span className="file-selected-name">
+                  Selected: {imageFile.name}
+                </span>
+              )}
+            </div>
           </>
         )}
 

@@ -15,6 +15,10 @@ const Comments = ({
   const [editingReplyId, setEditingReplyId] = useState(null)
   const [editingReplyText, setEditingReplyText] = useState("")
 
+  // ✅ Popup state
+  const [success, setSuccess] = useState("")
+  const [error, setError] = useState("")
+
   const getCurrentUserId = () => {
     if (currentUser?.id) return String(currentUser.id)
     if (currentUser?._id) return String(currentUser._id)
@@ -37,7 +41,6 @@ const Comments = ({
 
   const userId = getCurrentUserId()
 
-  // ✅ Fixed: Single isOwner function - NOT nested
   const isOwner = (owner) => {
     if (!userId || !owner) return false
     if (typeof owner === "string") return owner === userId
@@ -48,7 +51,6 @@ const Comments = ({
     return false
   }
 
-  // ✅ All handlers are now at the correct scope level
   const handleDeleteComment = async (commentId) => {
     try {
       await Client.delete(`/comment/${commentId}`)
@@ -63,9 +65,10 @@ const Comments = ({
           : c
       )
       setChallenges(updatedChallenges)
-    } catch (error) {
-      console.error("Error deleting comment:", error)
-      alert("Error deleting comment")
+      setSuccess("Comment deleted successfully!")
+    } catch (err) {
+      console.error("Error deleting comment:", err)
+      setError("Failed to delete comment.")
     }
   }
 
@@ -103,9 +106,10 @@ const Comments = ({
       setChallenges(updatedChallenges)
       setEditingCommentId(null)
       setEditText("")
-    } catch (error) {
-      console.error("Error editing comment:", error)
-      alert("Error editing comment")
+      setSuccess("Comment updated successfully!")
+    } catch (err) {
+      console.error("Error editing comment:", err)
+      setError("Failed to edit comment.")
     }
   }
 
@@ -116,16 +120,11 @@ const Comments = ({
 
   const handleAddReply = async (commentId) => {
     if (!replyText.trim()) return
-
     try {
-      // ✅ Fixed: Use the correct endpoint
       const response = await Client.post(`/comment/${commentId}/reply`, {
         comment: replyText,
       })
 
-      console.log("✅ Reply response:", response.data)
-
-      // ✅ Get the populated reply from response or create one
       const newReply = {
         _id:
           response.data.replies?.[response.data.replies.length - 1]?._id ||
@@ -158,9 +157,10 @@ const Comments = ({
       setChallenges(updatedChallenges)
       setReplyingCommentId(null)
       setReplyText("")
-    } catch (error) {
-      console.error("Error adding reply:", error)
-      alert("Error adding reply")
+      setSuccess("Reply added successfully!")
+    } catch (err) {
+      console.error("Error adding reply:", err)
+      setError("Failed to add reply.")
     }
   }
 
@@ -168,7 +168,6 @@ const Comments = ({
     if (!editingReplyText.trim()) return
 
     try {
-      // ✅ Fixed: Use correct endpoint for editing reply
       await Client.put(`/comment/${commentId}/reply/${replyId}`, {
         comment: editingReplyText,
       })
@@ -194,15 +193,15 @@ const Comments = ({
       setChallenges(updatedChallenges)
       setEditingReplyId(null)
       setEditingReplyText("")
-    } catch (error) {
-      console.error("Error editing reply:", error)
-      alert("Error editing reply")
+      setSuccess("Reply updated successfully!")
+    } catch (err) {
+      console.error("Error editing reply:", err)
+      setError("Failed to edit reply.")
     }
   }
 
   const handleDeleteReply = async (commentId, replyId) => {
     try {
-      // ✅ Fixed: Use correct endpoint for deleting reply
       await Client.delete(`/comment/${commentId}/reply/${replyId}`)
       const updatedChallenges = challenges.map((c) =>
         c._id === challenge._id
@@ -220,14 +219,40 @@ const Comments = ({
           : c
       )
       setChallenges(updatedChallenges)
-    } catch (error) {
-      console.error("Error deleting reply:", error)
-      alert("Error deleting reply")
+      setSuccess("Reply deleted successfully!")
+    } catch (err) {
+      console.error("Error deleting reply:", err)
+      setError("Failed to delete reply.")
     }
   }
 
   return (
     <div className="comments-container">
+      {/* ✅ Success & Error Popups */}
+      {success && (
+        <div className="popup popup-success">
+          <div className="popup-content">
+            <span className="popup-icon">✓</span>
+            <span>{success}</span>
+            <button onClick={() => setSuccess("")} className="popup-close">
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
+      {error && (
+        <div className="popup popup-error">
+          <div className="popup-content">
+            <span className="popup-icon">⚠</span>
+            <span>{error}</span>
+            <button onClick={() => setError("")} className="popup-close">
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
       {comments && comments.length > 0 ? (
         comments.map((c) => (
           <div key={c._id} className="comment-item">
@@ -250,16 +275,29 @@ const Comments = ({
                   type="text"
                   value={editText}
                   onChange={(e) => setEditText(e.target.value)}
+                  placeholder="Edit your comment..."
+                  className="comment-edit-input"
                 />
-                <button onClick={() => handleEditComment(c._id)}>Save</button>
-                <button onClick={cancelEditing}>Cancel</button>
+                <div className="comment-edit-actions">
+                  <button
+                    onClick={() => handleEditComment(c._id)}
+                    className="save-edit-btn"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={cancelEditing}
+                    className="cancel-edit-btn"
+                  >
+                    Cancel
+                  </button>
+                </div>
               </div>
             ) : (
               <>
                 <p className="comment-text">{c.comment}</p>
 
                 <div className="comment-actions">
-                  {/* ✅ Reply button for all logged-in users */}
                   {currentUser && (
                     <button
                       onClick={() => {
@@ -268,22 +306,28 @@ const Comments = ({
                       }}
                       className="reply-btn"
                     >
-                      Reply
+                      💬 Reply
                     </button>
                   )}
 
-                  {/* ✅ Edit/Delete only for comment owner */}
                   {isOwner(c.owner) && (
-                    <>
-                      <button onClick={() => startEditing(c)}>Edit</button>
-                      <button onClick={() => handleDeleteComment(c._id)}>
-                        Delete
+                    <div className="owner-actions">
+                      <button
+                        onClick={() => startEditing(c)}
+                        className="edit-comment-btn"
+                      >
+                        ✏️ Edit
                       </button>
-                    </>
+                      <button
+                        onClick={() => handleDeleteComment(c._id)}
+                        className="delete-comment-btn"
+                      >
+                        🗑️ Delete
+                      </button>
+                    </div>
                   )}
                 </div>
 
-                {/* ✅ Reply input form */}
                 {replyingCommentId === c._id && (
                   <div className="reply-form">
                     <input
@@ -291,17 +335,25 @@ const Comments = ({
                       value={replyText}
                       onChange={(e) => setReplyText(e.target.value)}
                       placeholder="Write a reply..."
+                      className="reply-input"
                     />
-                    <button onClick={() => handleAddReply(c._id)}>
-                      Post Reply
-                    </button>
-                    <button onClick={() => setReplyingCommentId(null)}>
-                      Cancel
-                    </button>
+                    <div className="reply-form-actions">
+                      <button
+                        onClick={() => handleAddReply(c._id)}
+                        className="post-reply-btn"
+                      >
+                        Post Reply
+                      </button>
+                      <button
+                        onClick={() => setReplyingCommentId(null)}
+                        className="cancel-reply-btn"
+                      >
+                        Cancel
+                      </button>
+                    </div>
                   </div>
                 )}
 
-                {/* ✅ Display replies */}
                 {c.replies && c.replies.length > 0 && (
                   <div className="replies-container">
                     {c.replies.map((r) => (
@@ -327,27 +379,40 @@ const Comments = ({
                               onChange={(e) =>
                                 setEditingReplyText(e.target.value)
                               }
+                              placeholder="Edit your reply..."
+                              className="reply-edit-input"
                             />
-                            <button
-                              onClick={() => handleEditReply(c._id, r._id)}
-                            >
-                              Save
-                            </button>
-                            <button onClick={cancelEditingReply}>Cancel</button>
+                            <div className="reply-edit-actions">
+                              <button
+                                onClick={() => handleEditReply(c._id, r._id)}
+                                className="save-reply-btn"
+                              >
+                                Save
+                              </button>
+                              <button
+                                onClick={cancelEditingReply}
+                                className="cancel-reply-btn"
+                              >
+                                Cancel
+                              </button>
+                            </div>
                           </div>
                         ) : (
                           <>
                             <p className="reply-text">{r.comment}</p>
-                            {/* ✅ Edit/Delete only for reply owner */}
                             {isOwner(r.owner) && (
                               <div className="reply-actions">
-                                <button onClick={() => startEditingReply(r)}>
+                                <button
+                                  onClick={() => startEditingReply(r)}
+                                  className="edit-reply-action-btn"
+                                >
                                   Edit
                                 </button>
                                 <button
                                   onClick={() =>
                                     handleDeleteReply(c._id, r._id)
                                   }
+                                  className="delete-reply-action-btn"
                                 >
                                   Delete
                                 </button>
@@ -364,7 +429,7 @@ const Comments = ({
           </div>
         ))
       ) : (
-        <p>No comments yet</p>
+        <p className="no-comments">No comments yet. Be the first to comment!</p>
       )}
     </div>
   )
