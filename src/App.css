@@ -1,4 +1,6 @@
-/* Color Palette Variables - Engie Designs Inspired */
+/* =========================
+   Root Color Palette
+   ========================= */
 :root {
   --primary-dark: #4d0213;
   --primary-accent: #76404e;
@@ -8,9 +10,12 @@
   --white: #ffffff;
   --text-dark: #2d1b1f;
   --text-light: #5a4a4e;
-  --shadow: rgba(77, 2, 19, 0.12);
+  --shadow: rgba(77, 2, 19, 0.15);
 }
 
+/* =========================
+   Reset + Base
+   ========================= */
 * {
   margin: 0;
   padding: 0;
@@ -18,11 +23,10 @@
 }
 
 body {
-  margin: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #f5f3f1 0%, var(--light-silver) 100%);
-  min-height: 100vh;
   color: var(--text-dark);
+  min-height: 100vh;
 }
 
 
@@ -1243,139 +1247,6 @@ body {
   background: #fff9e6;
   border-radius: 8px;
   border-left: 4px solid var(--warm-tan);
-}
-
-/* ========== AUTH PAGES (Login, Register, etc.) ========== */
-.col {
-  max-width: 500px;
-  margin: 60px auto;
-  padding: 40px 50px;
-  background: white;
-  border-radius: 25px;
-  box-shadow: 0 8px 30px var(--shadow);
-  border: 2px solid #f5f3f1;
-}
-
-.col img {
-  width: 100%;
-  max-width: 300px;
-  margin: 0 auto 30px;
-  display: block;
-}
-
-.col form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.col h2 {
-  color: var(--primary-dark);
-  text-align: center;
-  margin-bottom: 25px;
-  font-size: 2rem;
-  font-weight: 800;
-}
-
-.col label {
-  font-weight: 700;
-  color: var(--primary-dark);
-  margin-bottom: 6px;
-  font-size: 1.05rem;
-}
-
-.col input,
-.col select {
-  padding: 14px 18px;
-  border: 2px solid var(--light-silver);
-  border-radius: 10px;
-  font-size: 1.05rem;
-  transition: all 0.3s ease;
-  font-family: inherit;
-}
-
-.col input:focus,
-.col select:focus {
-  border-color: var(--warm-tan);
-  outline: none;
-  box-shadow: 0 0 10px rgba(185, 147, 102, 0.2);
-}
-
-.col button[type="submit"] {
-  padding: 14px;
-  background: linear-gradient(
-    135deg,
-    var(--warm-tan) 0%,
-    var(--warm-gray) 100%
-  );
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 10px;
-  box-shadow: 0 4px 15px rgba(185, 147, 102, 0.3);
-}
-
-.col button[type="submit"]:hover:not(:disabled) {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(185, 147, 102, 0.4);
-}
-
-.col button[type="submit"]:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-.col button[type="button"] {
-  padding: 8px 16px;
-  background: var(--light-silver);
-  color: var(--primary-dark);
-  border: 2px solid var(--primary-dark);
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.col button[type="button"]:hover {
-  background: var(--primary-dark);
-  color: white;
-}
-
-.col p {
-  text-align: center;
-  color: var(--text-light);
-  margin-top: 15px;
-}
-
-.col a {
-  color: var(--warm-tan);
-  text-decoration: none;
-  font-weight: 700;
-  transition: color 0.3s ease;
-}
-
-.col a:hover {
-  color: var(--primary-dark);
-}
-
-.input-wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-.password-field {
-  display: flex;
-  gap: 10px;
-  align-items: stretch;
-}
-
-.password-field input {
-  flex: 1;
 }
 
 /* ========== CHALLENGES PAGE ========== */

@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { RegisterUser } from "../services/Auth"
+import "../Auth.css"
 
 const Register = () => {
   const navigate = useNavigate()
@@ -28,6 +29,17 @@ const Register = () => {
     setError("")
     setSuccess("")
 
+    // Client-side validation
+    if (formValues.password !== formValues.confirmPassword) {
+      setError("Passwords do not match")
+      return
+    }
+
+    if (formValues.password.length < 8) {
+      setError("Password must be at least 8 characters long")
+      return
+    }
+
     try {
       const res = await RegisterUser(formValues)
       console.log("Registered user:", res)
@@ -35,7 +47,6 @@ const Register = () => {
       setSuccess("Registration successful! Redirecting to login...")
       setFormValues(initialState)
 
-      // Wait a moment before redirecting so user can see the message
       setTimeout(() => {
         navigate("/login")
       }, 1500)
@@ -47,115 +58,136 @@ const Register = () => {
     }
   }
 
+  const isFormValid =
+    formValues.username &&
+    formValues.email &&
+    formValues.password &&
+    formValues.confirmPassword &&
+    formValues.gender &&
+    formValues.password === formValues.confirmPassword
+
   return (
-    <div className="col register">
-      <img src="/images/register.png" alt="Register Title Image" />
-
-      <form onSubmit={handleSubmit}>
-        {/* Username */}
-        <div className="input-wrapper">
-          <label htmlFor="username">Username</label>
-          <input
-            id="username"
-            name="username"
-            type="text"
-            placeholder="username"
-            onChange={handleChange}
-            value={formValues.username}
-            required
-          />
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-header">
+          <h2>Create Account</h2>
+          <p className="auth-subtitle">
+            Join us and start your culinary journey
+          </p>
         </div>
 
-        {/* Email */}
-        <div className="input-wrapper">
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            placeholder="example@gmail.com"
-            onChange={handleChange}
-            value={formValues.email}
-            required
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="auth-form">
+          {/* Username */}
+          <div className="input-wrapper">
+            <label htmlFor="username">Username</label>
+            <input
+              id="username"
+              name="username"
+              type="text"
+              placeholder="Enter your username"
+              onChange={handleChange}
+              value={formValues.username}
+              required
+            />
+          </div>
 
-        {/* Password */}
-        <label htmlFor="password">Password</label>
-        <div>
-          <input
-            id="password"
-            name="password"
-            type={showPassword ? "text" : "password"}
-            placeholder="password"
-            onChange={handleChange}
-            value={formValues.password}
-            required
-          />
-          <button type="button" onClick={() => setShowPassword(!showPassword)}>
-            {showPassword ? "Hide" : "Show"}
+          {/* Email */}
+          <div className="input-wrapper">
+            <label htmlFor="email">Email Address</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="you@example.com"
+              onChange={handleChange}
+              value={formValues.email}
+              required
+            />
+          </div>
+
+          {/* Password */}
+          <div className="input-wrapper">
+            <label htmlFor="password">Password</label>
+            <div className="password-field">
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Create a secure password"
+                onChange={handleChange}
+                value={formValues.password}
+                required
+              />
+              <button
+                type="button"
+                className="toggle-password-btn"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
+            </div>
+          </div>
+
+          {/* Confirm Password */}
+          <div className="input-wrapper">
+            <label htmlFor="confirmPassword">Confirm Password</label>
+            <div className="password-field">
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="Confirm your password"
+                onChange={handleChange}
+                value={formValues.confirmPassword}
+                required
+              />
+              <button
+                type="button"
+                className="toggle-password-btn"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                aria-label={
+                  showConfirmPassword ? "Hide password" : "Show password"
+                }
+              >
+                {showConfirmPassword ? "Hide" : "Show"}
+              </button>
+            </div>
+          </div>
+
+          {/* Gender Dropdown */}
+          <div className="input-wrapper">
+            <label htmlFor="gender">Gender</label>
+            <select
+              id="gender"
+              name="gender"
+              value={formValues.gender}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select your gender</option>
+              <option value="female">Female</option>
+              <option value="male">Male</option>
+            </select>
+          </div>
+
+          {/* Feedback Messages */}
+          {error && <div className="alert alert-error">{error}</div>}
+          {success && <div className="alert alert-success">{success}</div>}
+
+          {/* Submit button */}
+          <button type="submit" className="submit-btn" disabled={!isFormValid}>
+            Create Account
           </button>
+        </form>
+
+        {/* Link to login */}
+        <div className="auth-footer">
+          <p>
+            Already have an account? <Link to="/login">Sign In</Link>
+          </p>
         </div>
-
-        {/* Confirm Password */}
-        <label htmlFor="confirmPassword">Confirm Password</label>
-        <div>
-          <input
-            id="confirmPassword"
-            name="confirmPassword"
-            type={showConfirmPassword ? "text" : "password"}
-            placeholder="confirmPassword"
-            onChange={handleChange}
-            value={formValues.confirmPassword}
-            required
-          />
-          <button
-            type="button"
-            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-          >
-            {showConfirmPassword ? "Hide" : "Show"}
-          </button>
-        </div>
-
-        {/* Gender Dropdown */}
-        <div className="input-wrapper">
-          <label htmlFor="gender">Gender</label>
-          <select
-            id="gender"
-            name="gender"
-            value={formValues.gender}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select gender</option>
-            <option value="female">Female</option>
-            <option value="male">Male</option>
-          </select>
-        </div>
-
-        {/* Submit button*/}
-        <button
-          type="submit"
-          disabled={
-            !formValues.username ||
-            !formValues.email ||
-            !formValues.password ||
-            !formValues.confirmPassword ||
-            !formValues.gender ||
-            formValues.password !== formValues.confirmPassword
-          }
-        >
-          Register
-        </button>
-
-        {/* Feedback */}
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        {success && <p style={{ color: "green" }}>{success}</p>}
-      </form>
-
-      {/* Link to login */}
-      <p>Already have an account?</p>
-      <Link to="/login">Login</Link>
+      </div>
     </div>
   )
 }

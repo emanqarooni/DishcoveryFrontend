@@ -53,16 +53,18 @@ const App = () => {
     "/auth/reset",
   ]
 
-  // Check if current path should hide sidebar
-  const shouldHideSidebar = hideSidebarRoutes.some((path) =>
-    location.pathname.startsWith(path)
-  )
+  // // Check if current path should hide sidebar
+  // const shouldHideSidebar = hideSidebarRoutes.some((path) =>
+  //   location.pathname.startsWith(path)
+  // )
 
   return (
     <>
-      {!shouldHideSidebar && user && (
-        <Nav user={user} handleLogOut={handleLogOut} />
-      )}
+      {user &&
+        location.pathname !== "/" &&
+        !hideSidebarRoutes.some((path) =>
+          location.pathname.startsWith(path)
+        ) && <Nav user={user} handleLogOut={handleLogOut} />}
 
       <main>
         <Routes>

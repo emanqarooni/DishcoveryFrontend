@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { SignInUser } from "../services/Auth"
 import { useNavigate, Link } from "react-router-dom"
+import "../Auth.css"
 
 const Login = ({ setUser }) => {
   const navigate = useNavigate()
@@ -28,9 +29,8 @@ const Login = ({ setUser }) => {
 
       setSuccess("Login successful! Redirecting...")
 
-      // Redirect after short delay
       setTimeout(() => {
-        navigate(`/users/${userData.id}`)
+        navigate(`/recipe`)
       }, 1500)
     } catch (err) {
       console.error("Login error:", err)
@@ -42,64 +42,71 @@ const Login = ({ setUser }) => {
   }
 
   return (
-    <div className="col signin">
-      <img src="/images/signin.png" alt="Sign In Title Image" />
-
-      <form className="col" onSubmit={handleSubmit}>
-        {/* Email */}
-        <div className="input-wrapper">
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            placeholder="example@example.com"
-            onChange={handleChange}
-            value={formValues.email}
-            required
-            autoComplete="email"
-          />
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-header">
+          <h2>Welcome Back</h2>
+          <p className="auth-subtitle">Sign in to continue</p>
         </div>
 
-        {/* Password */}
-        <label htmlFor="password">Password</label>
-        <div>
-          <input
-            id="password"
-            name="password"
-            type={showPassword ? "text" : "password"}
-            placeholder="password"
-            onChange={handleChange}
-            value={formValues.password}
-            required
-          />
-          <button type="button" onClick={() => setShowPassword(!showPassword)}>
-            {showPassword ? "Hide" : "Show"}
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <div className="input-wrapper">
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="example@example.com"
+              onChange={handleChange}
+              value={formValues.email}
+              required
+              autoComplete="email"
+            />
+          </div>
+
+          <div className="input-wrapper">
+            <label htmlFor="password">Password</label>
+            <div className="password-field">
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="password"
+                onChange={handleChange}
+                value={formValues.password}
+                required
+              />
+              <button
+                type="button"
+                className="toggle-password-btn"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
+            </div>
+          </div>
+
+          {error && <p className="alert alert-error">{error}</p>}
+          {success && <p className="alert alert-success">{success}</p>}
+
+          <button
+            type="submit"
+            className="submit-btn"
+            disabled={!formValues.email || !formValues.password}
+          >
+            Sign In
           </button>
+        </form>
+
+        <div className="auth-footer">
+          <p>
+            Don’t have an account? <Link to="/register">Sign up</Link>
+          </p>
+          <p>
+            <Link to="/forgot-password">Forgot your password?</Link>
+          </p>
         </div>
-
-        {/* Submit button */}
-        <button
-          type="submit"
-          disabled={!formValues.email || !formValues.password}
-        >
-          Sign In
-        </button>
-
-        {/* Feedback messages */}
-        {error && <p style={{ color: "red", marginTop: "0.5rem" }}>{error}</p>}
-        {success && (
-          <p style={{ color: "green", marginTop: "0.5rem" }}>{success}</p>
-        )}
-      </form>
-
-      {/* Navigation links */}
-      <p>
-        Don’t have an account? <Link to="/register">Sign up</Link>
-      </p>
-      <p>
-        <Link to="/forgot-password">Forgot your password?</Link>
-      </p>
+      </div>
     </div>
   )
 }

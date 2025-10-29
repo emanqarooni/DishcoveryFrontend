@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { ForgotPasswordService } from "../services/Auth"
+import "../Auth.css"
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("")
@@ -27,30 +28,41 @@ const ForgotPassword = () => {
   }
 
   return (
-    <div className="col forgot-password">
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">Email</label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          placeholder="example@gmail.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          autoComplete="email"
-        />
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-header">
+          <h2>Forgot Password?</h2>
+          <p className="auth-subtitle">We'll send you a reset link</p>
+        </div>
 
-        <button type="submit" disabled={!email}>
-          Send Reset Link
-        </button>
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <div className="input-wrapper">
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="example@gmail.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              autoComplete="email"
+            />
+          </div>
 
-        {message && <p style={{ color: "green" }}>{message}</p>}
-        {error && <p style={{ color: "red" }}>{error}</p>}
-      </form>
+          {message && <p className="alert alert-success">{message}</p>}
+          {error && <p className="alert alert-error">{error}</p>}
 
-      <p>Remembered your password?</p>
-      <Link to="/login">Back to Login</Link>
+          <button type="submit" className="submit-btn" disabled={!email}>
+            Send Reset Link
+          </button>
+        </form>
+
+        <div className="auth-footer">
+          <p>Remembered your password?</p>
+          <Link to="/login">Back to Login</Link>
+        </div>
+      </div>
     </div>
   )
 }
