@@ -1,10 +1,10 @@
 /* Color Palette Variables */
 :root {
-  --blueberry: #2C3F70;
-  --strawberry: #A5231C;
-  --buttercream: #C8D4E5;
-  --violet: #8089D2;
-  --meringe: #F0F5F5;
+  --blueberry: #2c3f70;
+  --strawberry: #a5231c;
+  --buttercream: #c8d4e5;
+  --violet: #8089d2;
+  --meringe: #f0f5f5;
   --white: #ffffff;
   --text-dark: #333333;
   --text-light: #666666;
@@ -19,8 +19,12 @@
 
 body {
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, var(--meringe) 0%, var(--buttercream) 100%);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(
+    135deg,
+    var(--meringe) 0%,
+    var(--buttercream) 100%
+  );
   min-height: 100vh;
   color: var(--text-dark);
 }
@@ -249,7 +253,11 @@ body {
 
 .category-button:hover {
   border-color: var(--violet);
-  background: linear-gradient(135deg, var(--buttercream) 0%, var(--meringe) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--buttercream) 0%,
+    var(--meringe) 100%
+  );
   transform: translateY(-2px);
 }
 
@@ -293,7 +301,11 @@ body {
   width: 100%;
   height: 220px;
   overflow: hidden;
-  background: linear-gradient(135deg, var(--buttercream) 0%, var(--meringe) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--buttercream) 0%,
+    var(--meringe) 100%
+  );
 }
 
 .recipeImage img {
@@ -352,7 +364,6 @@ body {
   font-weight: 600;
 }
 
-<<<<<<< HEAD
 /* Loading and Error States */
 .loading-message,
 .error-message {
@@ -523,7 +534,6 @@ main {
 }
 
 /* Recipe Details Page */
-=======
 .recipe-owner {
   display: flex;
   align-items: center;
@@ -547,8 +557,6 @@ main {
   font-weight: 600;
 }
 
-/* ========== RECIPE DETAILS PAGE ========== */
->>>>>>> 9868b6dfd203df027f5b9cb9bbaf41f307ffeafc
 .recipe-details-container {
   max-width: 1000px;
   margin: 0 auto;
@@ -691,7 +699,11 @@ main {
   gap: 25px;
   margin-bottom: 30px;
   padding: 20px;
-  background: linear-gradient(135deg, var(--meringe) 0%, var(--buttercream) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--meringe) 0%,
+    var(--buttercream) 100%
+  );
   border-radius: 15px;
 }
 
@@ -783,7 +795,11 @@ main {
 }
 
 .ingredients-list li:hover {
-  background: linear-gradient(135deg, var(--buttercream) 0%, var(--meringe) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--buttercream) 0%,
+    var(--meringe) 100%
+  );
   transform: translateX(10px);
 }
 
@@ -829,7 +845,11 @@ main {
 }
 
 .rating-form {
-  background: linear-gradient(135deg, var(--meringe) 0%, var(--buttercream) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--meringe) 0%,
+    var(--buttercream) 100%
+  );
   padding: 25px;
   border-radius: 15px;
   margin-bottom: 35px;
@@ -1803,7 +1823,12 @@ main {
 .hero-title {
   font-size: 4rem;
   font-weight: 900;
-  background: linear-gradient(135deg, var(--blueberry) 0%, var(--violet) 50%, var(--strawberry) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--blueberry) 0%,
+    var(--violet) 50%,
+    var(--strawberry) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1936,7 +1961,8 @@ main {
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -2056,7 +2082,11 @@ main {
   right: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 70%
+  );
   animation: rotate 20s linear infinite;
 }
 
@@ -2352,7 +2382,11 @@ main {
   display: flex;
   gap: 12px;
   padding: 20px 25px;
-  background: linear-gradient(135deg, var(--meringe) 0%, var(--buttercream) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--meringe) 0%,
+    var(--buttercream) 100%
+  );
   border-top: 2px solid var(--buttercream);
 }
 

@@ -136,8 +136,12 @@ const Challenges = ({ user }) => {
         console.error("Error fetching challenges:", error)
       }
     }
-    loadChallenges()
-  }, [])
+
+    // ✅ Load challenges whenever user is available
+    if (user) {
+      loadChallenges()
+    }
+  }, [user])
 
   useEffect(() => {
     const activeChallenge = getCurrentChallenge()
@@ -167,12 +171,11 @@ const Challenges = ({ user }) => {
       return
     }
 
-    const userId = localStorage.getItem("userId")
+    const userId = user?.id || user?._id
 
     const existing = challenges.find(
       (c) =>
-        c.owner?._id === userId &&
-        c.challengeMonth === currentChallenge?.month
+        c.owner?._id === userId && c.challengeMonth === currentChallenge?.month
     )
 
     if (existing) {
@@ -191,7 +194,10 @@ const Challenges = ({ user }) => {
         headers: { "Content-Type": "multipart/form-data" },
       })
 
-      const newChallenges = sortChallengesByLikes([response.data, ...challenges])
+      const newChallenges = sortChallengesByLikes([
+        response.data,
+        ...challenges,
+      ])
       setChallenges(newChallenges)
       setDescription("")
       setImage(null)
@@ -222,7 +228,11 @@ const Challenges = ({ user }) => {
           <div className="winner-info">
             <strong>By: {winner.owner?.username || "User"}</strong>
           </div>
-          <img src={`${BASE_URL}${winner.image}`} alt="Winner" className="winner-img" />
+          <img
+            src={`${BASE_URL}${winner.image}`}
+            alt="Winner"
+            className="winner-img"
+          />
           <p>{winner.description}</p>
           <p>❤️ {winner.likes?.length || 0} likes</p>
         </div>

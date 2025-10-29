@@ -101,15 +101,11 @@ const App = () => {
 
           {/* challenges routes */}
           <Route path="/recipe/createRecipe" element={<Form />} />
-<<<<<<< HEAD
-          <Route path="/challenges" element={<Challenges />} />
+          <Route path="/challenges" element={<Challenges user={user} />} />
 
           {/* explore routes */}
           <Route path="/explore" element={<Explore />} />
           <Route path="/explore/:mealId" element={<ExploreDetails />} />
-=======
-          <Route path="/challenges" element={<Challenges user={user}/>} />
->>>>>>> 9868b6dfd203df027f5b9cb9bbaf41f307ffeafc
         </Routes>
       </main>
     </>

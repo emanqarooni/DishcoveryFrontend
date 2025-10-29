@@ -13,60 +13,45 @@ const Comments = ({
   const [replyingCommentId, setReplyingCommentId] = useState(null)
   const [replyText, setReplyText] = useState("")
   const [editingReplyId, setEditingReplyId] = useState(null)
-  const [editReplyText, setEditReplyText] = useState("")
+  const [editingReplyText, setEditingReplyText] = useState("")
 
-  // ✅ الحصول على ID المستخدم الحالي
   const getCurrentUserId = () => {
-    if (currentUser?._id) return currentUser._id
+    if (currentUser?.id) return String(currentUser.id)
+    if (currentUser?._id) return String(currentUser._id)
 
     const userStr = localStorage.getItem("user")
     if (userStr) {
       try {
         const user = JSON.parse(userStr)
-        if (user?._id) return user._id
+        if (user?.id) return String(user.id)
+        if (user?._id) return String(user._id)
       } catch (e) {
         console.error("Error parsing user:", e)
       }
     }
 
     const userId = localStorage.getItem("userId")
-    if (userId) return userId
-
+    if (userId) return String(userId)
     return null
   }
 
   const userId = getCurrentUserId()
 
-  // ✅ التحقق من الملكية - محسّن
-  const isOwner = (itemOwner) => {
-    if (!userId || !itemOwner) {
-      console.log("❌ No userId or itemOwner")
-      return false
-    }
-
-    let ownerIdToCompare = null
-
-    // إذا كان owner عبارة عن object
-    if (typeof itemOwner === "object" && itemOwner !== null) {
-      ownerIdToCompare = itemOwner._id || itemOwner.id
-    }
-    // إذا كان owner عبارة عن string
-    else if (typeof itemOwner === "string") {
-      ownerIdToCompare = itemOwner
-    }
-
-    const result = String(ownerIdToCompare) === String(userId)
-    console.log(`🔍 Comparing: ${ownerIdToCompare} === ${userId} = ${result}`)
-    return result
+  // ✅ Fixed: Single isOwner function - NOT nested
+  const isOwner = (owner) => {
+    if (!userId || !owner) return false
+    if (typeof owner === "string") return owner === userId
+    if (typeof owner === "object" && owner._id)
+      return String(owner._id) === userId
+    if (typeof owner === "object" && owner.id)
+      return String(owner.id) === userId
+    return false
   }
 
-  // ✅ حذف التعليق
+  // ✅ All handlers are now at the correct scope level
   const handleDeleteComment = async (commentId) => {
-    if (!window.confirm("Are you sure you want to delete this comment?")) return
-
     try {
       await Client.delete(`/comment/${commentId}`)
-
       const updatedChallenges = challenges.map((c) =>
         c._id === challenge._id
           ? {
@@ -77,7 +62,6 @@ const Comments = ({
             }
           : c
       )
-
       setChallenges(updatedChallenges)
     } catch (error) {
       console.error("Error deleting comment:", error)
@@ -85,13 +69,25 @@ const Comments = ({
     }
   }
 
-  // ✅ تعديل التعليق
+  const startEditing = (comment) => {
+    setEditingCommentId(comment._id)
+    setEditText(comment.comment)
+  }
+
+  const cancelEditing = () => {
+    setEditingCommentId(null)
+    setEditText("")
+  }
+
+  const cancelEditingReply = () => {
+    setEditingReplyId(null)
+    setEditingReplyText("")
+  }
+
   const handleEditComment = async (commentId) => {
     if (!editText.trim()) return
-
     try {
       await Client.put(`/comment/${commentId}`, { comment: editText })
-
       const updatedChallenges = challenges.map((c) =>
         c._id === challenge._id
           ? {
@@ -104,7 +100,6 @@ const Comments = ({
             }
           : c
       )
-
       setChallenges(updatedChallenges)
       setEditingCommentId(null)
       setEditText("")
@@ -114,27 +109,34 @@ const Comments = ({
     }
   }
 
-  // ✅ إضافة Reply جديد
+  const startEditingReply = (reply) => {
+    setEditingReplyId(reply._id)
+    setEditingReplyText(reply.comment)
+  }
+
   const handleAddReply = async (commentId) => {
     if (!replyText.trim()) return
 
     try {
-      const { data } = await Client.post(`/comment/${commentId}/reply`, {
+      // ✅ Fixed: Use the correct endpoint
+      const response = await Client.post(`/comment/${commentId}/reply`, {
         comment: replyText,
       })
 
-      console.log("✅ Reply response:", data)
+      console.log("✅ Reply response:", response.data)
 
-      // إنشاء reply جديد مع بيانات المستخدم الكاملة
+      // ✅ Get the populated reply from response or create one
       const newReply = {
-        _id: data.reply?._id || data._id || Date.now().toString(),
+        _id:
+          response.data.replies?.[response.data.replies.length - 1]?._id ||
+          Date.now().toString(),
         comment: replyText,
         owner: {
-          _id: currentUser._id,
-          username: currentUser.username,
-          image: currentUser.image,
+          _id: currentUser?.id || currentUser?._id,
+          username: currentUser?.username,
+          image: currentUser?.image,
         },
-        createdAt: data.reply?.createdAt || new Date().toISOString(),
+        createdAt: new Date().toISOString(),
       }
 
       const updatedChallenges = challenges.map((c) =>
@@ -162,15 +164,14 @@ const Comments = ({
     }
   }
 
-  // ✅ تعديل Reply
   const handleEditReply = async (commentId, replyId) => {
-    if (!editReplyText.trim()) return
+    if (!editingReplyText.trim()) return
 
     try {
+      // ✅ Fixed: Use correct endpoint for editing reply
       await Client.put(`/comment/${commentId}/reply/${replyId}`, {
-        comment: editReplyText,
+        comment: editingReplyText,
       })
-
       const updatedChallenges = challenges.map((c) =>
         c._id === challenge._id
           ? {
@@ -181,7 +182,7 @@ const Comments = ({
                       ...comment,
                       replies: comment.replies.map((reply) =>
                         reply._id === replyId
-                          ? { ...reply, comment: editReplyText }
+                          ? { ...reply, comment: editingReplyText }
                           : reply
                       ),
                     }
@@ -190,23 +191,19 @@ const Comments = ({
             }
           : c
       )
-
       setChallenges(updatedChallenges)
       setEditingReplyId(null)
-      setEditReplyText("")
+      setEditingReplyText("")
     } catch (error) {
       console.error("Error editing reply:", error)
       alert("Error editing reply")
     }
   }
 
-  // ✅ حذف Reply
   const handleDeleteReply = async (commentId, replyId) => {
-    if (!window.confirm("Are you sure you want to delete this reply?")) return
-
     try {
+      // ✅ Fixed: Use correct endpoint for deleting reply
       await Client.delete(`/comment/${commentId}/reply/${replyId}`)
-
       const updatedChallenges = challenges.map((c) =>
         c._id === challenge._id
           ? {
@@ -222,7 +219,6 @@ const Comments = ({
             }
           : c
       )
-
       setChallenges(updatedChallenges)
     } catch (error) {
       console.error("Error deleting reply:", error)
@@ -230,218 +226,143 @@ const Comments = ({
     }
   }
 
-  const startEditing = (comment) => {
-    setEditingCommentId(comment._id)
-    setEditText(comment.comment)
-  }
-
-  const cancelEditing = () => {
-    setEditingCommentId(null)
-    setEditText("")
-  }
-
-  const startReply = (commentId) => {
-    setReplyingCommentId(commentId)
-    setReplyText("")
-  }
-
-  const cancelReply = () => {
-    setReplyingCommentId(null)
-    setReplyText("")
-  }
-
-  const startEditingReply = (reply) => {
-    setEditingReplyId(reply._id)
-    setEditReplyText(reply.comment)
-  }
-
-  const cancelEditingReply = () => {
-    setEditingReplyId(null)
-    setEditReplyText("")
-  }
-
   return (
-    <div className="comments-section">
+    <div className="comments-container">
       {comments && comments.length > 0 ? (
-        comments.map((c) => {
-          const commentOwner =
-            typeof c.owner === "string"
-              ? { _id: c.owner, username: "User", image: null }
-              : c.owner
+        comments.map((c) => (
+          <div key={c._id} className="comment-item">
+            <div className="comment-header">
+              <img
+                src={
+                  c.owner?.image
+                    ? `${BASE_URL}${c.owner.image}`
+                    : "/default-avatar.png"
+                }
+                alt="profile"
+                className="comment-avatar"
+              />
+              <strong>{c.owner?.username || "User"}</strong>
+            </div>
 
-          // للتحقق من المشكلة
-          console.log("📝 Comment ID:", c._id)
-          console.log("👤 Comment owner:", c.owner)
-          console.log("🔑 Current userId:", userId)
-          console.log("✅ Is owner?", isOwner(c.owner))
-
-          return (
-            <div key={c._id} className="comment-item">
-              <div className="comment-header">
-                <img
-                  src={
-                    commentOwner?.image
-                      ? `${BASE_URL}${commentOwner.image}`
-                      : "/default-avatar.png"
-                  }
-                  alt="profile"
-                  className="comment-avatar"
+            {editingCommentId === c._id ? (
+              <div className="edit-comment-form">
+                <input
+                  type="text"
+                  value={editText}
+                  onChange={(e) => setEditText(e.target.value)}
                 />
-                <strong>{commentOwner?.username || "User"}</strong>
+                <button onClick={() => handleEditComment(c._id)}>Save</button>
+                <button onClick={cancelEditing}>Cancel</button>
               </div>
+            ) : (
+              <>
+                <p className="comment-text">{c.comment}</p>
 
-              {editingCommentId === c._id ? (
-                <div className="edit-comment-form">
-                  <input
-                    type="text"
-                    value={editText}
-                    onChange={(e) => setEditText(e.target.value)}
-                    className="edit-comment-input"
-                  />
-                  <div className="edit-comment-actions">
+                <div className="comment-actions">
+                  {/* ✅ Reply button for all logged-in users */}
+                  {currentUser && (
                     <button
-                      onClick={() => handleEditComment(c._id)}
-                      className="save-btn"
+                      onClick={() => {
+                        setReplyingCommentId(c._id)
+                        setReplyText("")
+                      }}
+                      className="reply-btn"
                     >
-                      Save
+                      Reply
                     </button>
-                    <button onClick={cancelEditing} className="cancel-btn">
+                  )}
+
+                  {/* ✅ Edit/Delete only for comment owner */}
+                  {isOwner(c.owner) && (
+                    <>
+                      <button onClick={() => startEditing(c)}>Edit</button>
+                      <button onClick={() => handleDeleteComment(c._id)}>
+                        Delete
+                      </button>
+                    </>
+                  )}
+                </div>
+
+                {/* ✅ Reply input form */}
+                {replyingCommentId === c._id && (
+                  <div className="reply-form">
+                    <input
+                      type="text"
+                      value={replyText}
+                      onChange={(e) => setReplyText(e.target.value)}
+                      placeholder="Write a reply..."
+                    />
+                    <button onClick={() => handleAddReply(c._id)}>
+                      Post Reply
+                    </button>
+                    <button onClick={() => setReplyingCommentId(null)}>
                       Cancel
                     </button>
                   </div>
-                </div>
-              ) : (
-                <>
-                  <p className="comment-text">{c.comment}</p>
+                )}
 
-                  {/* ✅ أزرار Edit/Delete تظهر فقط للمالك */}
-                  {isOwner(c.owner) && (
-                    <div className="comment-actions">
-                      <button
-                        onClick={() => startEditing(c)}
-                        className="edit-btn"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDeleteComment(c._id)}
-                        className="delete-btn"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  )}
+                {/* ✅ Display replies */}
+                {c.replies && c.replies.length > 0 && (
+                  <div className="replies-container">
+                    {c.replies.map((r) => (
+                      <div key={r._id} className="reply-item">
+                        <div className="reply-header">
+                          <img
+                            src={
+                              r.owner?.image
+                                ? `${BASE_URL}${r.owner.image}`
+                                : "/default-avatar.png"
+                            }
+                            alt="profile"
+                            className="reply-avatar"
+                          />
+                          <strong>{r.owner?.username || "User"}</strong>
+                        </div>
 
-                  {/* ✅ زر Reply */}
-                  <button
-                    onClick={() => startReply(c._id)}
-                    className="reply-btn"
-                  >
-                    Reply
-                  </button>
-
-                  {/* ✅ نموذج إضافة Reply */}
-                  {replyingCommentId === c._id && (
-                    <div className="reply-form">
-                      <input
-                        type="text"
-                        value={replyText}
-                        onChange={(e) => setReplyText(e.target.value)}
-                        placeholder="Write a reply..."
-                      />
-                      <button onClick={() => handleAddReply(c._id)}>
-                        Send
-                      </button>
-                      <button onClick={cancelReply}>Cancel</button>
-                    </div>
-                  )}
-
-                  {/* ✅ عرض الـ Replies */}
-                  {c.replies && c.replies.length > 0 && (
-                    <div className="replies">
-                      {c.replies.map((r) => {
-                        const replyOwner =
-                          typeof r.owner === "string"
-                            ? { _id: r.owner, username: "User", image: null }
-                            : r.owner
-
-                        return (
-                          <div key={r._id} className="reply-item">
-                            <div className="reply-header">
-                              <img
-                                src={
-                                  replyOwner?.image
-                                    ? `${BASE_URL}${replyOwner.image}`
-                                    : "/default-avatar.png"
-                                }
-                                alt="profile"
-                                className="reply-avatar"
-                              />
-                              <strong>{replyOwner?.username || "User"}</strong>
-                            </div>
-
-                            {editingReplyId === r._id ? (
-                              <div className="edit-reply-form">
-                                <input
-                                  type="text"
-                                  value={editReplyText}
-                                  onChange={(e) =>
-                                    setEditReplyText(e.target.value)
-                                  }
-                                  className="edit-reply-input"
-                                />
-                                <div className="edit-reply-actions">
-                                  <button
-                                    onClick={() =>
-                                      handleEditReply(c._id, r._id)
-                                    }
-                                    className="save-btn"
-                                  >
-                                    Save
-                                  </button>
-                                  <button
-                                    onClick={cancelEditingReply}
-                                    className="cancel-btn"
-                                  >
-                                    Cancel
-                                  </button>
-                                </div>
-                              </div>
-                            ) : (
-                              <>
-                                <p className="reply-text">{r.comment}</p>
-
-                                {/* ✅ أزرار Edit/Delete للـ Reply */}
-                                {isOwner(r.owner) && (
-                                  <div className="reply-actions">
-                                    <button
-                                      onClick={() => startEditingReply(r)}
-                                      className="edit-btn"
-                                    >
-                                      Edit
-                                    </button>
-                                    <button
-                                      onClick={() =>
-                                        handleDeleteReply(c._id, r._id)
-                                      }
-                                      className="delete-btn"
-                                    >
-                                      Delete
-                                    </button>
-                                  </div>
-                                )}
-                              </>
-                            )}
+                        {editingReplyId === r._id ? (
+                          <div className="edit-reply-form">
+                            <input
+                              type="text"
+                              value={editingReplyText}
+                              onChange={(e) =>
+                                setEditingReplyText(e.target.value)
+                              }
+                            />
+                            <button
+                              onClick={() => handleEditReply(c._id, r._id)}
+                            >
+                              Save
+                            </button>
+                            <button onClick={cancelEditingReply}>Cancel</button>
                           </div>
-                        )
-                      })}
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-          )
-        })
+                        ) : (
+                          <>
+                            <p className="reply-text">{r.comment}</p>
+                            {/* ✅ Edit/Delete only for reply owner */}
+                            {isOwner(r.owner) && (
+                              <div className="reply-actions">
+                                <button onClick={() => startEditingReply(r)}>
+                                  Edit
+                                </button>
+                                <button
+                                  onClick={() =>
+                                    handleDeleteReply(c._id, r._id)
+                                  }
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        ))
       ) : (
         <p>No comments yet</p>
       )}

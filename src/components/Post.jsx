@@ -6,7 +6,7 @@ const Post = ({ challenge, challenges, setChallenges, user }) => {
   const [commentText, setCommentText] = useState("")
   const [showComments, setShowComments] = useState(true)
 
-  const currentUser = JSON.parse(localStorage.getItem("user"))
+  const currentUser = user || JSON.parse(localStorage.getItem("user") || "null")
 
   // handle like وإعادة ترتيب
   const handleLike = async () => {
@@ -41,6 +41,12 @@ const Post = ({ challenge, challenges, setChallenges, user }) => {
   // ✅ add comment handler - محدّث
   const handleAddComment = async (e) => {
     e.preventDefault()
+
+    if (!currentUser) {
+      alert("Please log in to comment")
+      return
+    }
+
     if (!commentText.trim()) return
 
     try {
@@ -59,7 +65,7 @@ const Post = ({ challenge, challenges, setChallenges, user }) => {
           Date.now().toString(),
         comment: commentText,
         owner: {
-          _id: currentUser._id,
+          _id: currentUser.id || currentUser._id,
           username: currentUser.username,
           image: currentUser.image,
         },
