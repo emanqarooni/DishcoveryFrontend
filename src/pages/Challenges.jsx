@@ -75,6 +75,10 @@ const Challenges = ({ user }) => {
   const [timeLeft, setTimeLeft] = useState("")
   const [challengeEnded, setChallengeEnded] = useState(false)
 
+  // ✅ Popup states
+  const [success, setSuccess] = useState("")
+  const [error, setError] = useState("")
+
   const getCurrentChallenge = () => {
     const now = new Date()
     return (
@@ -84,11 +88,8 @@ const Challenges = ({ user }) => {
     )
   }
 
-  const sortChallengesByLikes = (posts) => {
-    return [...posts].sort(
-      (a, b) => (b.likes?.length || 0) - (a.likes?.length || 0)
-    )
-  }
+  const sortChallengesByLikes = (posts) =>
+    [...posts].sort((a, b) => (b.likes?.length || 0) - (a.likes?.length || 0))
 
   const updateCountdown = () => {
     if (!currentChallenge) return
@@ -132,15 +133,14 @@ const Challenges = ({ user }) => {
       try {
         const response = await Client.get("/posts")
         setChallenges(sortChallengesByLikes(response.data))
-      } catch (error) {
-        console.error("Error fetching challenges:", error)
+      } catch (err) {
+        console.error("Error fetching challenges:", err)
+        setError("Failed to load challenges")
+        setTimeout(() => setError(""), 3000)
       }
     }
 
-    // ✅ Load challenges whenever user is available
-    if (user) {
-      loadChallenges()
-    }
+    if (user) loadChallenges()
   }, [user])
 
   useEffect(() => {
@@ -155,9 +155,7 @@ const Challenges = ({ user }) => {
     const interval = setInterval(updateCountdown, 1000)
     return () => clearInterval(interval)
   }, [currentChallenge])
-  // ✅ انتهى التعديل
 
-  // تحديث الفائز عند انتهاء التحدي
   useEffect(() => {
     if (currentChallenge && challengeEnded) {
       announceWinner()
@@ -166,20 +164,22 @@ const Challenges = ({ user }) => {
 
   const handleAddChallenge = async (e) => {
     e.preventDefault()
+
     if (!description || !image) {
-      alert("Please provide both image and description")
+      setError("Please provide both image and description")
+      setTimeout(() => setError(""), 3000)
       return
     }
 
     const userId = user?.id || user?._id
-
     const existing = challenges.find(
       (c) =>
         c.owner?._id === userId && c.challengeMonth === currentChallenge?.month
     )
 
     if (existing) {
-      alert("You already added a post for this month's challenge")
+      setError("You already added a post for this month's challenge")
+      setTimeout(() => setError(""), 3000)
       return
     }
 
@@ -201,10 +201,13 @@ const Challenges = ({ user }) => {
       setChallenges(newChallenges)
       setDescription("")
       setImage(null)
-      setLoading(false)
-    } catch (error) {
-      console.error("Error adding challenge:", error)
-      alert("Error adding challenge")
+      setSuccess("Challenge added successfully!")
+      setTimeout(() => setSuccess(""), 3000)
+    } catch (err) {
+      console.error("Error adding challenge:", err)
+      setError("Error adding challenge")
+      setTimeout(() => setError(""), 3000)
+    } finally {
       setLoading(false)
     }
   }
@@ -215,9 +218,38 @@ const Challenges = ({ user }) => {
 
   return (
     <div className="challenges-page">
+      {/* ✅ Popup messages */}
+      <div>
+        {/* Success Popup */}
+        {success && (
+          <div className="popup popup-success">
+            <div className="popup-content">
+              <span className="popup-icon">✓</span>
+              <span>{success}</span>
+              <button onClick={() => setSuccess("")} className="popup-close">
+                ×
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Error Popup */}
+        {error && (
+          <div className="popup popup-error">
+            <div className="popup-content">
+              <span className="popup-icon">⚠</span>
+              <span>{error}</span>
+              <button onClick={() => setError("")} className="popup-close">
+                ×
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
       <h1>
         {currentChallenge
-          ? currentChallenge.month + " Challenge"
+          ? `${currentChallenge.month} Challenge`
           : "No Active Challenge"}
       </h1>
       {currentChallenge && <p>Time left: {timeLeft}</p>}
@@ -241,11 +273,20 @@ const Challenges = ({ user }) => {
       {currentChallenge && !challengeEnded && (
         <form className="add-challenge-form" onSubmit={handleAddChallenge}>
           <h3>Add Your Recipe</h3>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setImage(e.target.files[0])}
-          />
+          <div className="file-input-wrapper">
+            <label className="file-input-label">
+              <span className="file-input-text">📸 Choose Image</span>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setImage(e.target.files[0])}
+                className="file-input-hidden"
+              />
+            </label>
+            {image && (
+              <span className="file-selected-name">Selected: {image.name}</span>
+            )}
+          </div>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}

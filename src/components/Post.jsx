@@ -5,15 +5,16 @@ import Comments from "./Comment"
 const Post = ({ challenge, challenges, setChallenges, user }) => {
   const [commentText, setCommentText] = useState("")
   const [showComments, setShowComments] = useState(true)
+  const [success, setSuccess] = useState("")
+  const [error, setError] = useState("")
 
   const currentUser = user || JSON.parse(localStorage.getItem("user") || "null")
 
-  // handle like وإعادة ترتيب
+  // ✅ Handle Like
   const handleLike = async () => {
     try {
       const response = await Client.post(`/posts/${challenge._id}/like`)
 
-      // التأكد من أن response.data يحتوي على الصورة
       const updatedPost = {
         ...response.data,
         image: response.data.image || challenge.image,
@@ -28,22 +29,23 @@ const Post = ({ challenge, challenges, setChallenges, user }) => {
         c._id === challenge._id ? updatedPost : c
       )
 
-      // إعادة ترتيب بعد كل لايك
       const sorted = updatedChallenges.sort(
         (a, b) => (b.likes?.length || 0) - (a.likes?.length || 0)
       )
       setChallenges(sorted)
-    } catch (error) {
-      console.error("Error liking post:", error)
+      setSuccess("You liked this post!")
+    } catch (err) {
+      console.error("Error liking post:", err)
+      setError("Failed to like post.")
     }
   }
 
-  // ✅ add comment handler - محدّث
+  // ✅ Handle Add Comment
   const handleAddComment = async (e) => {
     e.preventDefault()
 
     if (!currentUser) {
-      alert("Please log in to comment")
+      setError("Please log in to comment.")
       return
     }
 
@@ -55,9 +57,6 @@ const Post = ({ challenge, challenges, setChallenges, user }) => {
         comment: commentText,
       })
 
-      console.log("✅ Comment response:", response.data)
-
-      // إنشاء comment جديد مع بيانات المستخدم الكاملة
       const newComment = {
         _id:
           response.data.comment?._id ||
@@ -82,14 +81,40 @@ const Post = ({ challenge, challenges, setChallenges, user }) => {
       setChallenges(updatedChallenges)
       setCommentText("")
       setShowComments(true)
-    } catch (error) {
-      console.error("Error adding comment:", error)
-      alert("Error adding comment")
+      setSuccess("Comment added successfully!")
+    } catch (err) {
+      console.error("Error adding comment:", err)
+      setError("Failed to add comment.")
     }
   }
 
   return (
     <div className="post-card">
+      {/* ✅ Success & Error Popups */}
+      {success && (
+        <div className="popup popup-success">
+          <div className="popup-content">
+            <span className="popup-icon">✓</span>
+            <span>{success}</span>
+            <button onClick={() => setSuccess("")} className="popup-close">
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
+      {error && (
+        <div className="popup popup-error">
+          <div className="popup-content">
+            <span className="popup-icon">⚠</span>
+            <span>{error}</span>
+            <button onClick={() => setError("")} className="popup-close">
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Owner Info */}
       {challenge.owner && (
         <div className="post-owner">
@@ -107,14 +132,17 @@ const Post = ({ challenge, challenges, setChallenges, user }) => {
           </span>
         </div>
       )}
+
       <img
         src={`${BASE_URL}${challenge.image}`}
         alt="Recipe"
         className="post-image"
       />
+
       <p>{challenge.description}</p>
       <p>{challenge.likes?.length || 0} Likes</p>
       <button onClick={handleLike}>Like</button>
+
       <form onSubmit={handleAddComment}>
         <input
           type="text"
@@ -124,6 +152,7 @@ const Post = ({ challenge, challenges, setChallenges, user }) => {
         />
         <button type="submit">Post</button>
       </form>
+
       {showComments && (
         <Comments
           comments={challenge.comments}
