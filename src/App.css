@@ -1,4 +1,6 @@
-/* Color Palette Variables - Engie Designs Inspired */
+/* =========================
+   Root Color Palette
+   ========================= */
 :root {
   --primary-dark: #4d0213;
   --primary-accent: #76404e;
@@ -8,9 +10,12 @@
   --white: #ffffff;
   --text-dark: #2d1b1f;
   --text-light: #5a4a4e;
-  --shadow: rgba(77, 2, 19, 0.12);
+  --shadow: rgba(77, 2, 19, 0.15);
 }
 
+/* =========================
+   Reset + Base
+   ========================= */
 * {
   margin: 0;
   padding: 0;
@@ -18,108 +23,188 @@
 }
 
 body {
-  margin: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #f5f3f1 0%, var(--light-silver) 100%);
-  min-height: 100vh;
   color: var(--text-dark);
+  min-height: 100vh;
 }
 
-/* ========== SIDEBAR ========== */
-.sidebar-toggle {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  background: linear-gradient(
-    135deg,
-    var(--primary-dark) 0%,
-    var(--primary-accent) 100%
-  );
-  color: white;
-  border: none;
-  padding: 12px 18px;
-  border-radius: 10px;
-  cursor: pointer;
-  z-index: 1001;
-  font-size: 18px;
-  box-shadow: 0 4px 15px var(--shadow);
-  transition: all 0.3s ease;
-}
-
-.sidebar-toggle:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(77, 2, 19, 0.3);
-}
-
+/* =========================
+   Sidebar
+   ========================= */
 .sidebar {
   position: fixed;
   top: 0;
-  left: -280px;
-  width: 280px;
-  height: 100%;
-  background: linear-gradient(180deg, var(--primary-dark) 0%, #2d0510 100%);
-  color: white;
-  padding: 80px 30px 30px;
-  box-sizing: border-box;
-  transition: left 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  z-index: 1000;
-  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2);
-}
-
-.sidebar.open {
   left: 0;
+  height: 100vh;
+  width: 280px;
+  background: linear-gradient(180deg, var(--primary-dark), #2d0510);
+  color: var(--white);
+  padding: 70px 20px 25px;
+  transition: width 0.35s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 4px 0 18px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  overflow: hidden;
 }
 
-.sidebar-title {
-  margin: 0 0 30px 0;
-  font-size: 1.8rem;
-  color: white;
-  border-bottom: 3px solid var(--warm-tan);
-  padding-bottom: 15px;
-  font-weight: 700;
+/* Collapsed sidebar */
+.sidebar.collapsed {
+  width: 100px;
+  padding: 70px 10px 25px;
 }
 
-.sidebar-link {
-  display: block;
-  color: var(--light-silver);
-  text-decoration: none;
-  font-size: 1.15rem;
-  margin-bottom: 20px;
-  padding: 12px 15px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  border-left: 3px solid transparent;
-}
-
-.sidebar-link:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-left-color: var(--warm-tan);
-  padding-left: 20px;
-  color: white;
-}
-
-.logout-btn {
-  background: linear-gradient(
-    135deg,
-    var(--primary-accent) 0%,
-    var(--primary-dark) 100%
-  );
+/* =========================
+   Toggle Button
+   ========================= */
+.toggle-btn {
+  position: absolute;
+  top: 15px;
+  right: 28px;
+  width: 38px;
+  height: 38px;
+  background: var(--primary-dark);
   color: white;
   border: none;
-  padding: 12px 20px;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 1.05rem;
-  transition: all 0.3s ease;
-  margin-top: 30px;
-  width: 100%;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2001;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  transition: 0.25s ease;
+}
+
+.toggle-btn:hover {
+  filter: brightness(1.12);
+}
+
+/* =========================
+   Sidebar Header
+   ========================= */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.sidebar-logo {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* =========================
+   User Info
+   ========================= */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--warm-tan);
+}
+
+/* Center avatar in collapsed mode */
+.sidebar.collapsed .user-info {
+  justify-content: center;
+}
+
+/* Hide text in collapsed mode */
+.sidebar.collapsed .user-info div {
+  display: none;
+}
+
+/* =========================
+   Menu Links
+   ========================= */
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar-link,
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.1rem;
+  color: var(--light-silver);
+  padding: 12px 15px;
+  border-radius: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: 0.25s ease-in-out;
+}
+
+.sidebar-link:hover,
+.logout-btn:hover {
+  background: rgba(255, 255, 255, 0.13);
+  color: var(--white);
+  border-left-color: var(--warm-tan);
+}
+
+/* Collapsed: hide text + center icons */
+.sidebar.collapsed .sidebar-link,
+.sidebar.collapsed .logout-btn {
+  justify-content: center !important;
+  padding: 14px 0 !important;
+}
+.sidebar.collapsed span {
+  display: none;
+}
+
+/* Ensure icons are perfectly centered */
+.sidebar-link i,
+.logout-btn i {
+  margin: 0 auto;
+}
+
+/* Center icon column */
+.sidebar.collapsed .sidebar-menu {
+  align-items: center;
+}
+
+/* =========================
+   Logout Button
+   ========================= */
+.logout-btn {
+  margin-top: auto;
+  background: linear-gradient(
+    135deg,
+    var(--primary-accent),
+    var(--primary-dark)
+  );
+  border: none;
   font-weight: 600;
   box-shadow: 0 4px 10px rgba(118, 64, 78, 0.3);
 }
 
-.logout-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(118, 64, 78, 0.4);
+/* =========================
+   Main Content Shift
+   ========================= */
+main {
+  margin-left: 280px;
+  transition: 0.35s ease;
+  padding: 25px;
+}
+
+/* Collapsed offset updated to 100px */
+.sidebar.collapsed ~ main {
+  margin-left: 100px;
 }
 
 /* ========== POPUP NOTIFICATIONS ========== */
@@ -412,56 +497,6 @@ body {
   font-size: 1.1rem;
 }
 
-/* sidebar */
-
-/* Sidebar base */
-.sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  background-color: #1e1e1e;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: width 0.3s ease;
-  overflow: hidden;
-  z-index: 1000;
-}
-
-/* Collapsed (only icons) */
-.sidebar.collapsed {
-  width: 80px;
-}
-
-/* Expanded (icons + text) */
-.sidebar.open {
-  width: 260px;
-}
-
-/* Sidebar header */
-.sidebar-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 15px;
-}
-
-.toggle-btn {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 22px;
-  cursor: pointer;
-}
-
-.sidebar-logo {
-  font-size: 20px;
-  font-weight: bold;
-  margin-left: 10px;
-}
-
 /* User Info */
 .user-info {
   display: flex;
@@ -532,7 +567,7 @@ main {
 }
 
 .sidebar.open ~ main {
-  margin-left: 260px;
+  margin-left: 300px;
 }
 
 @media (max-width: 480px) {
@@ -1409,139 +1444,6 @@ main {
   background: #fff9e6;
   border-radius: 8px;
   border-left: 4px solid var(--warm-tan);
-}
-
-/* ========== AUTH PAGES (Login, Register, etc.) ========== */
-.col {
-  max-width: 500px;
-  margin: 60px auto;
-  padding: 40px 50px;
-  background: white;
-  border-radius: 25px;
-  box-shadow: 0 8px 30px var(--shadow);
-  border: 2px solid #f5f3f1;
-}
-
-.col img {
-  width: 100%;
-  max-width: 300px;
-  margin: 0 auto 30px;
-  display: block;
-}
-
-.col form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.col h2 {
-  color: var(--primary-dark);
-  text-align: center;
-  margin-bottom: 25px;
-  font-size: 2rem;
-  font-weight: 800;
-}
-
-.col label {
-  font-weight: 700;
-  color: var(--primary-dark);
-  margin-bottom: 6px;
-  font-size: 1.05rem;
-}
-
-.col input,
-.col select {
-  padding: 14px 18px;
-  border: 2px solid var(--light-silver);
-  border-radius: 10px;
-  font-size: 1.05rem;
-  transition: all 0.3s ease;
-  font-family: inherit;
-}
-
-.col input:focus,
-.col select:focus {
-  border-color: var(--warm-tan);
-  outline: none;
-  box-shadow: 0 0 10px rgba(185, 147, 102, 0.2);
-}
-
-.col button[type="submit"] {
-  padding: 14px;
-  background: linear-gradient(
-    135deg,
-    var(--warm-tan) 0%,
-    var(--warm-gray) 100%
-  );
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 10px;
-  box-shadow: 0 4px 15px rgba(185, 147, 102, 0.3);
-}
-
-.col button[type="submit"]:hover:not(:disabled) {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(185, 147, 102, 0.4);
-}
-
-.col button[type="submit"]:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-.col button[type="button"] {
-  padding: 8px 16px;
-  background: var(--light-silver);
-  color: var(--primary-dark);
-  border: 2px solid var(--primary-dark);
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.col button[type="button"]:hover {
-  background: var(--primary-dark);
-  color: white;
-}
-
-.col p {
-  text-align: center;
-  color: var(--text-light);
-  margin-top: 15px;
-}
-
-.col a {
-  color: var(--warm-tan);
-  text-decoration: none;
-  font-weight: 700;
-  transition: color 0.3s ease;
-}
-
-.col a:hover {
-  color: var(--primary-dark);
-}
-
-.input-wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-.password-field {
-  display: flex;
-  gap: 10px;
-  align-items: stretch;
-}
-
-.password-field input {
-  flex: 1;
 }
 
 /* ========== CHALLENGES PAGE ========== */
