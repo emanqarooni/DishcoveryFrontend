@@ -14,6 +14,7 @@ const UserProfileEdit = ({ user, setUser }) => {
   const [preview, setPreview] = useState(null)
   const [message, setMessage] = useState("")
   const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -40,7 +41,7 @@ const UserProfileEdit = ({ user, setUser }) => {
     setFormData({ ...formData, [name]: value })
   }
 
-  //handle image changes
+  // Handle image changes with styled file input
   const handleImageChange = (e) => {
     const file = e.target.files[0]
     if (file) {
@@ -53,6 +54,7 @@ const UserProfileEdit = ({ user, setUser }) => {
     e.preventDefault()
     setError("")
     setMessage("")
+    setLoading(true)
 
     try {
       const data = new FormData()
@@ -65,11 +67,13 @@ const UserProfileEdit = ({ user, setUser }) => {
         headers: { "Content-Type": "multipart/form-data" },
       })
 
-      //update user state
+      // Update user state
       const updatedUser = res.data.user
       setUser(updatedUser)
 
       setMessage(res.data.message || "Profile updated successfully!")
+
+      // Success popup will redirect
       setTimeout(() => navigate(`/users/${userId}`), 1500)
     } catch (error) {
       console.error("Error updating profile:", error)
@@ -78,64 +82,138 @@ const UserProfileEdit = ({ user, setUser }) => {
       } else {
         setError("Failed to update profile. Please try again.")
       }
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
-    <div>
-      <h2>Edit Profile</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username:</label>
-          <input
-            name="username"
-            type="text"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
-        </div>
+    <div className="user-profile-edit-container">
+      <div className="col">
+        <h2>Edit Profile</h2>
 
-        <div>
-          <label>Email:</label>
-          <input
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div>
-          <label>Gender:</label>
-          <select
-            name="gender"
-            value={formData.gender}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-        </div>
-
-        <div>
-          <label>Profile Image:</label>
-          {preview && (
-            <div>
-              <img src={preview} alt="preview" width="120" height="120" />
+        {/* Success Popup */}
+        {message && (
+          <div className="popup popup-success">
+            <div className="popup-content">
+              <span className="popup-icon">✓</span>
+              <span>{message}</span>
+              <button onClick={() => setMessage("")} className="popup-close">
+                ×
+              </button>
             </div>
-          )}
-          <input type="file" accept="image/*" onChange={handleImageChange} />
-        </div>
+          </div>
+        )}
 
-        <button type="submit">Save Changes</button>
-      </form>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {message && <p style={{ color: "green" }}>{message}</p>}a
-      <button onClick={() => navigate(`/users/${userId}`)}>Cancel</button>
+        {/* Error Popup */}
+        {error && (
+          <div className="popup popup-error">
+            <div className="popup-content">
+              <span className="popup-icon">⚠</span>
+              <span>{error}</span>
+              <button onClick={() => setError("")} className="popup-close">
+                ×
+              </button>
+            </div>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="profile-edit-form">
+          <div className="input-wrapper">
+            <label htmlFor="username">Username:</label>
+            <input
+              id="username"
+              name="username"
+              type="text"
+              value={formData.username}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="input-wrapper">
+            <label htmlFor="email">Email:</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="input-wrapper">
+            <label htmlFor="gender">Gender:</label>
+            <select
+              id="gender"
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+
+          <div className="input-wrapper">
+            <label>Profile Image:</label>
+
+            {/* Image Preview */}
+            {preview && (
+              <div className="image-preview">
+                <img
+                  src={preview}
+                  alt="Preview"
+                  className="profile-preview-image"
+                />
+              </div>
+            )}
+
+            {/* Styled File Input - Same as Form.jsx */}
+            <div className="file-input-wrapper">
+              <label
+                className={`file-input-label ${
+                  formData.image ? "has-file" : ""
+                }`}
+              >
+                <span className="file-input-text">
+                  {formData.image
+                    ? "✅ Change Image"
+                    : "📸 Choose Profile Image"}
+                </span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="file-input-hidden"
+                />
+              </label>
+              {formData.image && (
+                <span className="file-selected-name">
+                  Selected: {formData.image.name}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="form-buttons">
+            <button type="submit" disabled={loading}>
+              {loading ? "Saving..." : "Save Changes"}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => navigate(`/users/${userId}`)}
+              className="cancel-button"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   )
 }

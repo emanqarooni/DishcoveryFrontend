@@ -25,102 +25,33 @@ body {
   color: var(--text-dark);
 }
 
-/* ========== SIDEBAR ========== */
-.sidebar-toggle {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  background: linear-gradient(
-    135deg,
-    var(--primary-dark) 0%,
-    var(--primary-accent) 100%
-  );
-  color: white;
-  border: none;
-  padding: 12px 18px;
-  border-radius: 10px;
-  cursor: pointer;
-  z-index: 1001;
-  font-size: 18px;
-  box-shadow: 0 4px 15px var(--shadow);
-  transition: all 0.3s ease;
-}
 
-.sidebar-toggle:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(77, 2, 19, 0.3);
-}
 
-.sidebar {
-  position: fixed;
-  top: 0;
-  left: -280px;
-  width: 280px;
-  height: 100%;
-  background: linear-gradient(180deg, var(--primary-dark) 0%, #2d0510 100%);
-  color: white;
-  padding: 80px 30px 30px;
-  box-sizing: border-box;
-  transition: left 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  z-index: 1000;
-  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2);
-}
 
-.sidebar.open {
-  left: 0;
-}
 
-.sidebar-title {
-  margin: 0 0 30px 0;
-  font-size: 1.8rem;
-  color: white;
-  border-bottom: 3px solid var(--warm-tan);
-  padding-bottom: 15px;
-  font-weight: 700;
-}
 
-.sidebar-link {
-  display: block;
-  color: var(--light-silver);
-  text-decoration: none;
-  font-size: 1.15rem;
-  margin-bottom: 20px;
-  padding: 12px 15px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  border-left: 3px solid transparent;
-}
 
-.sidebar-link:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-left-color: var(--warm-tan);
-  padding-left: 20px;
-  color: white;
-}
 
-.logout-btn {
-  background: linear-gradient(
-    135deg,
-    var(--primary-accent) 0%,
-    var(--primary-dark) 100%
-  );
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 1.05rem;
-  transition: all 0.3s ease;
-  margin-top: 30px;
-  width: 100%;
-  font-weight: 600;
-  box-shadow: 0 4px 10px rgba(118, 64, 78, 0.3);
-}
 
-.logout-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(118, 64, 78, 0.4);
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* ========== POPUP NOTIFICATIONS ========== */
 .popup {
@@ -430,138 +361,23 @@ body {
   font-size: 1.1rem;
 }
 
-/* sidebar */
 
-/* Sidebar base */
-.sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  background-color: #1e1e1e;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: width 0.3s ease;
-  overflow: hidden;
-  z-index: 1000;
-}
 
-/* Collapsed (only icons) */
-.sidebar.collapsed {
-  width: 80px;
-}
 
-/* Expanded (icons + text) */
-.sidebar.open {
-  width: 260px;
-}
 
-/* Sidebar header */
-.sidebar-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 15px;
-}
 
-.toggle-btn {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 22px;
-  cursor: pointer;
-}
 
-.sidebar-logo {
-  font-size: 20px;
-  font-weight: bold;
-  margin-left: 10px;
-}
 
-/* User Info */
-.user-info {
-  display: flex;
-  align-items: center;
-  padding: 15px;
-  gap: 10px;
-}
 
-.user-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-}
 
-.username {
-  font-weight: bold;
-  margin: 0;
-}
 
-.email {
-  font-size: 0.8rem;
-  color: #ccc;
-  margin: 0;
-}
 
-/* Menu links */
-.sidebar-menu {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  padding: 10px 20px;
-}
 
-.sidebar-link {
-  color: white;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
-  border-radius: 6px;
-  transition: background 0.3s;
-}
 
-.sidebar-link:hover {
-  background-color: #333;
-}
 
-/* Logout button */
-.logout-btn {
-  background: none;
-  border: none;
-  color: #f44336;
-  text-align: left;
-  cursor: pointer;
-  font-size: 1rem;
-}
 
-.logout-btn:hover {
-  color: #ff6b6b;
-}
 
-/* Push content right when sidebar is open */
-main {
-  margin-left: 80px;
-  transition: margin-left 0.3s ease;
-}
 
-.sidebar.open ~ main {
-  margin-left: 260px;
-}
-
-@media (max-width: 480px) {
-  .recipes-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .all-recipes-container {
-    padding: 15px;
-  }
-}
 
 /* Recipe Details Page */
 .recipe-owner {
@@ -3820,3 +3636,195 @@ main {
     font-size: 0.9rem;
   }
 }
+
+/* ========== SIDEBAR - CENTERED, NON-RESPONSIVE ========== */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background: linear-gradient(180deg, var(--primary-dark) 0%, #2d0510 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  z-index: 1000;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Collapsed state (only icons) */
+.sidebar.collapsed {
+  width: 80px;
+}
+
+/* Expanded state (icons + text) */
+.sidebar.open {
+  width: 280px;
+}
+
+/* Sidebar Header - CENTERED */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 25px 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  min-height: 80px;
+  text-align: center;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  left: 20px;
+}
+
+.toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+}
+
+.sidebar-logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+  text-align: center;
+}
+
+/* User Info - CENTERED */
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 25px 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  gap: 12px;
+  text-align: center;
+}
+
+.user-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--warm-tan);
+  box-shadow: 0 4px 10px rgba(185, 147, 102, 0.3);
+}
+
+.username {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+}
+
+.email {
+  font-size: 0.85rem;
+  color: var(--light-silver);
+  margin: 0;
+}
+
+/* Sidebar Menu - CENTERED */
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
+  gap: 5px;
+  flex: 1;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--light-silver);
+  text-decoration: none;
+  padding: 15px 0;
+  border-radius: 0;
+  transition: all 0.3s ease;
+  font-size: 1.1rem;
+  font-weight: 500;
+  gap: 12px;
+  white-space: nowrap;
+  width: 100%;
+  border: none;
+  background: none;
+}
+
+.sidebar-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  transform: none;
+  border-left: none;
+}
+
+/* Logout button specific styles */
+.sidebar-link.logout-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  font-family: inherit;
+  font-size: 1.1rem;
+  margin-top: auto;
+}
+
+.sidebar-link.logout-btn:hover {
+  background: rgba(220, 53, 69, 0.2);
+  color: #ff6b6b;
+}
+
+/* Icon styling */
+.sidebar-link span:first-child {
+  font-size: 1.4rem;
+}
+
+/* Text animation for collapsed state */
+.sidebar.collapsed .sidebar-link span:not(:first-child),
+.sidebar.collapsed .username,
+.sidebar.collapsed .email,
+.sidebar.collapsed .sidebar-logo {
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  width: 0;
+}
+
+.sidebar.open .sidebar-link span:not(:first-child),
+.sidebar.open .username,
+.sidebar.open .email,
+.sidebar.open .sidebar-logo {
+  opacity: 1;
+  visibility: visible;
+  width: auto;
+}
+
+/* Main content adjustment */
+main {
+  margin-left: 80px;
+  transition: margin-left 0.3s ease;
+  min-height: 100vh;
+}
+
+.sidebar.open ~ main {
+  margin-left: 280px;
+}
+
+
+
+

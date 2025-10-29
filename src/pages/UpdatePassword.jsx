@@ -17,6 +17,7 @@ const UpdatePassword = () => {
 
   const [message, setMessage] = useState("")
   const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
   // Password validation
   const passwordValidation = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/
@@ -52,8 +53,12 @@ const UpdatePassword = () => {
     e.preventDefault()
     setMessage("")
     setError("")
+    setLoading(true)
 
-    if (!validateForm()) return
+    if (!validateForm()) {
+      setLoading(false)
+      return
+    }
 
     try {
       const res = await Client.put(`/auth/update/${id}`, formData)
@@ -68,73 +73,118 @@ const UpdatePassword = () => {
         err.response?.data?.msg ||
         "Failed to update password."
       setError(msg)
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
-    <div>
-      <h2>Update Password</h2>
+    <div className="update-password-container">
+      <div className="col">
+        <h2>Update Password</h2>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="oldPassword">Old Password:</label>
-          <input
-            id="oldPassword"
-            type={showOldPassword ? "text" : "password"}
-            name="oldPassword"
-            value={formData.oldPassword}
-            onChange={handleChange}
-            required
-          />
-          <button
-            type="button"
-            onClick={() => setShowOldPassword(!showOldPassword)}
-          >
-            {showOldPassword ? "Hide" : "Show"}
-          </button>
-        </div>
+        {/* Success Popup */}
+        {message && (
+          <div className="popup popup-success">
+            <div className="popup-content">
+              <span className="popup-icon">✓</span>
+              <span>{message}</span>
+              <button onClick={() => setMessage("")} className="popup-close">
+                ×
+              </button>
+            </div>
+          </div>
+        )}
 
-        <div>
-          <label htmlFor="newPassword">New Password:</label>
-          <input
-            id="newPassword"
-            type={showNewPassword ? "text" : "password"}
-            name="newPassword"
-            value={formData.newPassword}
-            onChange={handleChange}
-            required
-          />
-          <button
-            type="button"
-            onClick={() => setShowNewPassword(!showNewPassword)}
-          >
-            {showNewPassword ? "Hide" : "Show"}
-          </button>
-        </div>
+        {/* Error Popup */}
+        {error && (
+          <div className="popup popup-error">
+            <div className="popup-content">
+              <span className="popup-icon">⚠</span>
+              <span>{error}</span>
+              <button onClick={() => setError("")} className="popup-close">
+                ×
+              </button>
+            </div>
+          </div>
+        )}
 
-        <div>
-          <label htmlFor="confirmPassword">Confirm New Password:</label>
-          <input
-            id="confirmPassword"
-            type={showConfirmPassword ? "text" : "password"}
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-          />
-          <button
-            type="button"
-            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-          >
-            {showConfirmPassword ? "Hide" : "Show"}
-          </button>
-        </div>
+        <form onSubmit={handleSubmit}>
+          <div className="input-wrapper">
+            <label htmlFor="oldPassword">Old Password:</label>
+            <div className="password-field">
+              <input
+                id="oldPassword"
+                type={showOldPassword ? "text" : "password"}
+                name="oldPassword"
+                value={formData.oldPassword}
+                onChange={handleChange}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowOldPassword(!showOldPassword)}
+              >
+                {showOldPassword ? "Hide" : "Show"}
+              </button>
+            </div>
+          </div>
 
-        <button type="submit">Update Password</button>
-      </form>
+          <div className="input-wrapper">
+            <label htmlFor="newPassword">New Password:</label>
+            <div className="password-field">
+              <input
+                id="newPassword"
+                type={showNewPassword ? "text" : "password"}
+                name="newPassword"
+                value={formData.newPassword}
+                onChange={handleChange}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+              >
+                {showNewPassword ? "Hide" : "Show"}
+              </button>
+            </div>
+          </div>
 
-      {message && <p style={{ color: "green" }}>{message}</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+          <div className="input-wrapper">
+            <label htmlFor="confirmPassword">Confirm New Password:</label>
+            <div className="password-field">
+              <input
+                id="confirmPassword"
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? "Hide" : "Show"}
+              </button>
+            </div>
+          </div>
+
+          <div className="form-buttons">
+            <button type="submit" disabled={loading}>
+              {loading ? "Updating..." : "Update Password"}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => navigate(`/users/${id}`)}
+              className="cancel-button"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   )
 }
