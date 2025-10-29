@@ -29,34 +29,6 @@ body {
   min-height: 100vh;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* ========== POPUP NOTIFICATIONS ========== */
 .popup {
   position: fixed;
@@ -364,24 +336,6 @@ body {
   color: #999;
   font-size: 1.1rem;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* Recipe Details Page */
 .recipe-owner {
@@ -3114,7 +3068,6 @@ body {
   }
 }
 
-
 /* ========== CUSTOM FILE INPUT ========== */
 .file-input-wrapper {
   display: flex;
@@ -3203,11 +3156,7 @@ body {
 
 /* Style for when file is selected */
 .file-input-label.has-file {
-  background: linear-gradient(
-    135deg,
-    #4caf50 0%,
-    #45a049 100%
-  );
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
   box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
 }
 
@@ -3287,7 +3236,11 @@ body {
 .post-reply-btn,
 .save-reply-btn {
   padding: 8px 20px;
-  background: linear-gradient(135deg, var(--warm-tan) 0%, var(--warm-gray) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--warm-tan) 0%,
+    var(--warm-gray) 100%
+  );
   color: white;
   border: none;
   border-radius: 8px;
@@ -3391,7 +3344,11 @@ body {
 /* Button Styles */
 .reply-btn {
   padding: 6px 16px;
-  background: linear-gradient(135deg, var(--primary-accent) 0%, var(--primary-dark) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--primary-accent) 0%,
+    var(--primary-dark) 100%
+  );
   color: white;
   border: none;
   border-radius: 8px;
@@ -3410,7 +3367,11 @@ body {
 .edit-comment-btn,
 .edit-reply-action-btn {
   padding: 6px 16px;
-  background: linear-gradient(135deg, var(--warm-tan) 0%, var(--warm-gray) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--warm-tan) 0%,
+    var(--warm-gray) 100%
+  );
   color: white;
   border: none;
   border-radius: 8px;
@@ -3695,7 +3656,3 @@ main {
 .sidebar.open ~ main {
   margin-left: 280px;
 }
-
-
-
-
