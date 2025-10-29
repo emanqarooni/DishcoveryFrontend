@@ -58,8 +58,8 @@ const Home = () => {
             <div className="feature-icon">🔍</div>
             <h3>Discover</h3>
             <p>
-              Browse through thousands of recipes from various cuisines and
-              find your next favorite dish
+              Browse through thousands of recipes from various cuisines and find
+              your next favorite dish
             </p>
           </div>
 
