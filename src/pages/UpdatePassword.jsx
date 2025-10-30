@@ -175,13 +175,7 @@ const UpdatePassword = () => {
               {loading ? "Updating..." : "Update Password"}
             </button>
 
-            <button
-              type="button"
-              onClick={() => navigate(`/users/${id}`)}
-              className="cancel-button"
-            >
-              Cancel
-            </button>
+            
           </div>
         </form>
       </div>

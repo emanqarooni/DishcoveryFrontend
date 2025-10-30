@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import Post from "../components/Post"
 import Client, { BASE_URL } from "../services/api"
 
+//Predefined challenge months
 const challengesData = [
   {
     month: "January",
@@ -75,10 +76,11 @@ const Challenges = ({ user }) => {
   const [timeLeft, setTimeLeft] = useState("")
   const [challengeEnded, setChallengeEnded] = useState(false)
 
-  // ✅ Popup states
+  //  Popup states
   const [success, setSuccess] = useState("")
   const [error, setError] = useState("")
 
+  //get current active challenge based on date
   const getCurrentChallenge = () => {
     const now = new Date()
     return (
@@ -88,9 +90,11 @@ const Challenges = ({ user }) => {
     )
   }
 
+  //sort posts by likes
   const sortChallengesByLikes = (posts) =>
     [...posts].sort((a, b) => (b.likes?.length || 0) - (a.likes?.length || 0))
 
+  //update countdown timer
   const updateCountdown = () => {
     if (!currentChallenge) return
     const end = new Date(currentChallenge.endDate)
@@ -109,26 +113,25 @@ const Challenges = ({ user }) => {
     setChallengeEnded(false)
   }
 
+  //determine winner after challenge ends
   const announceWinner = () => {
     if (!challenges || challenges.length === 0) {
       setWinner(null)
       return
     }
-
     const currentMonthChallenges = challenges.filter(
       (c) => c.challengeMonth === currentChallenge?.month
     )
-
     if (currentMonthChallenges.length === 0) {
       setWinner(null)
       return
     }
-
     const sorted = sortChallengesByLikes(currentMonthChallenges)
     setWinner(sorted[0])
   }
 
   useEffect(() => {
+    //load all posts from API
     const loadChallenges = async () => {
       try {
         const response = await Client.get("/posts")
@@ -139,61 +142,59 @@ const Challenges = ({ user }) => {
         setTimeout(() => setError(""), 3000)
       }
     }
-
     if (user) loadChallenges()
   }, [user])
 
   useEffect(() => {
+    //set current active challenge
     const activeChallenge = getCurrentChallenge()
     setCurrentChallenge(activeChallenge)
   }, [])
 
   useEffect(() => {
+    // countdown interval
     if (!currentChallenge) return
-
     updateCountdown()
     const interval = setInterval(updateCountdown, 1000)
     return () => clearInterval(interval)
   }, [currentChallenge])
 
+  // announce winner when challenge ends
   useEffect(() => {
     if (currentChallenge && challengeEnded) {
       announceWinner()
     }
   }, [challenges, challengeEnded, currentChallenge])
 
+  //add new challenge post
   const handleAddChallenge = async (e) => {
     e.preventDefault()
-
     if (!description || !image) {
       setError("Please provide both image and description")
       setTimeout(() => setError(""), 3000)
       return
     }
-
     const userId = user?.id || user?._id
     const existing = challenges.find(
       (c) =>
         c.owner?._id === userId && c.challengeMonth === currentChallenge?.month
     )
-
     if (existing) {
       setError("You already added a post for this month's challenge")
       setTimeout(() => setError(""), 3000)
       return
     }
-
     try {
       setLoading(true)
       const formData = new FormData()
       formData.append("image", image)
       formData.append("description", description)
       formData.append("challengeMonth", currentChallenge?.month || "")
-
       const response = await Client.post("/posts", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
 
+      //add new post and sort by likes
       const newChallenges = sortChallengesByLikes([
         response.data,
         ...challenges,
@@ -218,7 +219,7 @@ const Challenges = ({ user }) => {
 
   return (
     <div className="challenges-page">
-      {/* ✅ Popup messages */}
+      {/* Popup messages */}
       <div>
         {/* Success Popup */}
         {success && (
@@ -232,12 +233,11 @@ const Challenges = ({ user }) => {
             </div>
           </div>
         )}
-
         {/* Error Popup */}
         {error && (
           <div className="popup popup-error">
             <div className="popup-content">
-              <span className="popup-icon">⚠</span>
+              <span className="popup-icon">:warning:</span>
               <span>{error}</span>
               <button onClick={() => setError("")} className="popup-close">
                 ×
@@ -246,7 +246,6 @@ const Challenges = ({ user }) => {
           </div>
         )}
       </div>
-
       <h1>
         {currentChallenge
           ? `${currentChallenge.month} Challenge`
@@ -254,9 +253,12 @@ const Challenges = ({ user }) => {
       </h1>
       {currentChallenge && <p>Time left: {timeLeft}</p>}
 
+      {/* show winner card */}
       {challengeEnded && winner && (
         <div className="winner-card">
-          <h2>🏆 Winner of {currentChallenge.month} Challenge 🏆</h2>
+          <h2>
+            :trophy: Winner of {currentChallenge.month} Challenge :trophy:
+          </h2>
           <div className="winner-info">
             <strong>By: {winner.owner?.username || "User"}</strong>
           </div>
@@ -266,16 +268,19 @@ const Challenges = ({ user }) => {
             className="winner-img"
           />
           <p>{winner.description}</p>
-          <p>❤️ {winner.likes?.length || 0} likes</p>
+          <p>:heart: {winner.likes?.length || 0} likes</p>
         </div>
       )}
 
+      {/* add challenge form */}
       {currentChallenge && !challengeEnded && (
         <form className="add-challenge-form" onSubmit={handleAddChallenge}>
           <h3>Add Your Recipe</h3>
           <div className="file-input-wrapper">
             <label className="file-input-label">
-              <span className="file-input-text">📸 Choose Image</span>
+              <span className="file-input-text">
+                :camera_with_flash: Choose Image
+              </span>
               <input
                 type="file"
                 accept="image/*"
@@ -298,6 +303,7 @@ const Challenges = ({ user }) => {
         </form>
       )}
 
+      {/*display post for current month */}
       <div className="challenges-list">
         {currentMonthChallenges.length > 0 ? (
           currentMonthChallenges.map((challenge) => (

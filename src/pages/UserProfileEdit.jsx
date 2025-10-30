@@ -82,9 +82,8 @@ const UserProfileEdit = ({ user, setUser }) => {
       } else {
         setError("Failed to update profile. Please try again.")
       }
-    } finally {
-      setLoading(false)
     }
+    setLoading(false)
   }
 
   return (
