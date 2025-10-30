@@ -30,15 +30,12 @@ const AllRecipes = () => {
     try {
       setLoading(true)
       const response = await Client.get("/recipe")
-      // Backend now handles sorting by _id: -1 (newest first)
       setRecipes(response.data)
       setError("")
     } catch (error) {
-      console.error("Error fetching recipes:", error)
       setError("Failed to load recipes. Please try again.")
-    } finally {
-      setLoading(false)
     }
+    setLoading(false)
   }
 
   const filteredRecipes = recipes.filter((recipe) => {

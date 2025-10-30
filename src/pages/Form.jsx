@@ -3,9 +3,9 @@ import { useParams, useNavigate } from "react-router-dom"
 import Client from "../services/api.js"
 
 const Form = ({ recipes, setRecipes }) => {
-  const { recipeId } = useParams() // Get recipeId from URL if editing
+  const { recipeId } = useParams()
   const navigate = useNavigate()
-  const isEditMode = !!recipeId // Check if we're in edit mode
+  const isEditMode = !!recipeId 
 
   const initialState = {
     title: "",

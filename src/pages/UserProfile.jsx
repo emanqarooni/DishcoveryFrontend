@@ -18,9 +18,8 @@ const UserProfile = () => {
         console.log(response.data)
       } catch (error) {
         console.error("Error fetching user:", error)
-      } finally {
-        setLoading(false)
       }
+      setLoading(false)
     }
     getUser()
   }, [userId])

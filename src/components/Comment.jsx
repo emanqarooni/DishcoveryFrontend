@@ -8,6 +8,7 @@ const Comments = ({
   setChallenges,
   currentUser,
 }) => {
+
   const [editingCommentId, setEditingCommentId] = useState(null)
   const [editText, setEditText] = useState("")
   const [replyingCommentId, setReplyingCommentId] = useState(null)
@@ -15,11 +16,13 @@ const Comments = ({
   const [editingReplyId, setEditingReplyId] = useState(null)
   const [editingReplyText, setEditingReplyText] = useState("")
 
-  // ✅ Popup state
+  //  Popup state
   const [success, setSuccess] = useState("")
   const [error, setError] = useState("")
 
+
   const getCurrentUserId = () => {
+    //get current user id from props or localStorge
     if (currentUser?.id) return String(currentUser.id)
     if (currentUser?._id) return String(currentUser._id)
 
@@ -41,6 +44,7 @@ const Comments = ({
 
   const userId = getCurrentUserId()
 
+//check if current user is owner of comment and reply
   const isOwner = (owner) => {
     if (!userId || !owner) return false
     if (typeof owner === "string") return owner === userId
@@ -51,6 +55,7 @@ const Comments = ({
     return false
   }
 
+  //delete a comment
   const handleDeleteComment = async (commentId) => {
     try {
       await Client.delete(`/comment/${commentId}`)
@@ -72,6 +77,7 @@ const Comments = ({
     }
   }
 
+//start editing a comment
   const startEditing = (comment) => {
     setEditingCommentId(comment._id)
     setEditText(comment.comment)
@@ -87,6 +93,7 @@ const Comments = ({
     setEditingReplyText("")
   }
 
+  //save edited a comment
   const handleEditComment = async (commentId) => {
     if (!editText.trim()) return
     try {
@@ -113,11 +120,13 @@ const Comments = ({
     }
   }
 
+//start editing a reply
   const startEditingReply = (reply) => {
     setEditingReplyId(reply._id)
     setEditingReplyText(reply.comment)
   }
 
+  //add reply to a comment
   const handleAddReply = async (commentId) => {
     if (!replyText.trim()) return
     try {
@@ -164,6 +173,7 @@ const Comments = ({
     }
   }
 
+  //save edited reply
   const handleEditReply = async (commentId, replyId) => {
     if (!editingReplyText.trim()) return
 
@@ -200,6 +210,7 @@ const Comments = ({
     }
   }
 
+  //delete a reply
   const handleDeleteReply = async (commentId, replyId) => {
     try {
       await Client.delete(`/comment/${commentId}/reply/${replyId}`)
@@ -228,7 +239,7 @@ const Comments = ({
 
   return (
     <div className="comments-container">
-      {/* ✅ Success & Error Popups */}
+      {/* Success & Error Popups */}
       {success && (
         <div className="popup popup-success">
           <div className="popup-content">
@@ -256,6 +267,7 @@ const Comments = ({
       {comments && comments.length > 0 ? (
         comments.map((c) => (
           <div key={c._id} className="comment-item">
+            {/* display comment owner info */}
             <div className="comment-header">
               <img
                 src={
@@ -268,7 +280,7 @@ const Comments = ({
               />
               <strong>{c.owner?.username || "User"}</strong>
             </div>
-
+            {/*edit comment form */}
             {editingCommentId === c._id ? (
               <div className="edit-comment-form">
                 <input
@@ -310,6 +322,7 @@ const Comments = ({
                     </button>
                   )}
 
+                  {/*edit and delete only for comment owner */}
                   {isOwner(c.owner) && (
                     <div className="owner-actions">
                       <button
