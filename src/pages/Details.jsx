@@ -11,11 +11,13 @@ const Details = ({ user }) => {
   const [isFavorited, setIsFavorited] = useState(false)
   const [favoritesCount, setFavoritesCount] = useState(0)
 
-  // Rating state
   const [ratings, setRatings] = useState([])
   const [newRating, setNewRating] = useState(5)
   const [newComment, setNewComment] = useState("")
   const [submittingRating, setSubmittingRating] = useState(false)
+
+  const [success, setSuccess] = useState("")
+  const [popupError, setPopupError] = useState("")
 
   useEffect(() => {
     fetchRecipe()
@@ -58,7 +60,8 @@ const Details = ({ user }) => {
 
   const toggleFavorite = async () => {
     if (!user) {
-      alert("Please login to favorite recipes")
+      setPopupError("Please login to favorite recipes")
+      setTimeout(() => setPopupError(""), 5000)
       return
     }
 
@@ -68,7 +71,8 @@ const Details = ({ user }) => {
       setFavoritesCount(res.data.favoritesCount)
     } catch (err) {
       console.error("Error toggling favorite:", err)
-      alert("Failed to update favorite status")
+      setPopupError("Failed to update favorite status")
+      setTimeout(() => setPopupError(""), 5000)
     }
   }
 
@@ -76,7 +80,8 @@ const Details = ({ user }) => {
     e.preventDefault()
 
     if (!user) {
-      alert("Please login to rate recipes")
+      setPopupError("Please login to rate recipes")
+      setTimeout(() => setPopupError(""), 5000)
       return
     }
 
@@ -91,11 +96,13 @@ const Details = ({ user }) => {
       setRatings([response.data, ...ratings])
       setNewRating(5)
       setNewComment("")
-      alert("Rating submitted successfully!")
-      fetchRecipe() // Refresh recipe to update ratings count
+      setSuccess("Rating submitted successfully!")
+      setTimeout(() => setSuccess(""), 5000)
+      fetchRecipe()
     } catch (err) {
       console.error("Error submitting rating:", err)
-      alert("Failed to submit rating")
+      setPopupError("Failed to submit rating")
+      setTimeout(() => setPopupError(""), 5000)
     } finally {
       setSubmittingRating(false)
     }
@@ -105,11 +112,15 @@ const Details = ({ user }) => {
     if (window.confirm("Are you sure you want to delete this recipe?")) {
       try {
         await Client.delete(`/recipe/${recipeId}`)
-        alert("Recipe deleted successfully!")
-        navigate("/recipe")
+        setSuccess("Recipe deleted successfully!")
+        setTimeout(() => {
+          setSuccess("")
+          navigate("/recipe")
+        }, 1000)
       } catch (err) {
         console.error(err)
-        alert("Failed to delete recipe")
+        setPopupError("Failed to delete recipe")
+        setTimeout(() => setPopupError(""), 5000)
       }
     }
   }
@@ -131,6 +142,32 @@ const Details = ({ user }) => {
 
   return (
     <div className="recipe-details-container">
+      {/* Success Popup */}
+      {success && (
+        <div className="popup popup-success">
+          <div className="popup-content">
+            <span className="popup-icon">✓</span>
+            <span>{success}</span>
+            <button onClick={() => setSuccess("")} className="popup-close">
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Error Popup */}
+      {popupError && (
+        <div className="popup popup-error">
+          <div className="popup-content">
+            <span className="popup-icon">⚠</span>
+            <span>{popupError}</span>
+            <button onClick={() => setPopupError("")} className="popup-close">
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="details-header">
         <Link to="/recipe">
           <button className="back-button">← Back to Recipes</button>
