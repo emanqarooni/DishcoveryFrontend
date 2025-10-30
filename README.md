@@ -57,7 +57,7 @@ Follow the project phases in [trello](https://trello.com/invite/b/68f917991ad5df
 
 ####
 
-![](./assets/ERD.png)
+![](./assets/Last%20Diagram.png)
 
 ---
 
@@ -83,6 +83,36 @@ Follow the project phases in [trello](https://trello.com/invite/b/68f917991ad5df
 
 ---
 
+### **_Website:_**
+![](./assets/Home%20page.png)
+![](./assets/All%20Recipe.png)
+![](./assets/My%20Recipes.png)
+![](./assets/Recipe%20Details.png)
+![](./assets/Challenges.png)
+![](./assets/Explore%20Recipes.png)
+![](./assets/Explore%20Details.png)
+![](./assets/User%20Profile.png)
+
+---
+
+
+
 ### **_Credits:_**
+[Stack overflow](https://stackoverflow.com/questions/4964691/super-simple-email-validation-with-javascript)
+
+[input](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/email#basic_validation)
+
+[RegExp](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/test)
+
+[Password Reqular Expression](https://www.ocpsoft.org/tutorials/regular-expressions/password-regular-expression/)
+
+[validate Password](https://www.geeksforgeeks.org/javascript/javascript-program-to-validate-password-using-regular-expressions/)
+
+[stack overflow](https://stackoverflow.com/questions/19605150/regex-for-password-must-contain-at-least-eight-characters-at-least-one-number-a?)
+
+[THEMEALDB](https://www.themealdb.com/)
+
+[Nodemailer](https://nodemailer.com/)
+
 
 ###
